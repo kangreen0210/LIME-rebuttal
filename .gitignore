@@ -29,3 +29,8 @@ ckpt
 pretrained/
 LLaVA/
 *logs
+LLaVA-NeXT/
+*.sh
+visual_pope/
+img_out/
+exact_script/
