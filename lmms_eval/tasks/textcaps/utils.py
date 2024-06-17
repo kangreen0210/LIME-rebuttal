@@ -77,7 +77,6 @@ def textcaps_aggregation_result(results, metric, args=None):
     res = tokenizer.tokenize(res)
 
     eval_logger.info(f"Computing {metric} scores...")
-
     score, scores = scorers_dict[metric][0].compute_score(gts, res)
     # When metric is one of the Bleu, score will be a list
     if type(score) == list:

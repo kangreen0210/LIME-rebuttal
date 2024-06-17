@@ -199,6 +199,8 @@ class InstructBLIP(lmms):
             gen_kwargs["image_sizes"] = [visuals[idx].size for idx in range(len(visuals))]
             if "max_new_tokens" not in gen_kwargs:
                 gen_kwargs["max_new_tokens"] = 1024
+            if "max_new_tokens" in gen_kwargs:#如果有max_new_tokens 则删除max_length，以加速
+                gen_kwargs.pop("max_length", None)
             if "temperature" not in gen_kwargs:
                 gen_kwargs["temperature"] = 0
             if "top_p" not in gen_kwargs:

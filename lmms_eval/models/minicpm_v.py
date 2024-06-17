@@ -180,12 +180,16 @@ class MiniCPM_V(lmms):
                 elif not isinstance(until, list):
                     raise ValueError(f"Expected `gen_kwargs['until']` to be of type Union[str,list] but got {type(until)}")
             assert self.batch_size_per_gpu == 1, "Do not support batch_size_per_gpu > 1 for now"
-            assert len(visuals) == 1, "MiniCPM_V interface does not support bn_image > 1 for now"
+            # assert len(visuals) == 1, "MiniCPM_V interface does not support bn_image > 1 for now"
             context = contexts[0]
             if "<image>" in context:
                 # minicpm does not expect the <image> tag
                 context = context.replace("<image>", "")
-            msgs = [{"role": "user", "content": context}]
+            msgs1 = []
+            for visual in visuals:
+                msgs1.append(visual)
+            msgs1.append(context)
+
 
             gen_kwargs["image_sizes"] = [visuals[idx].size for idx in range(len(visuals))]
             if "max_new_tokens" not in gen_kwargs:
@@ -198,9 +202,9 @@ class MiniCPM_V(lmms):
                 gen_kwargs["num_beams"] = 1
             try:
                 # ominicpm does not give much information on how they do eval so I just use the chat format.
-                response, context, _ = self.model.chat(
-                    image=visuals[0],
-                    msgs=msgs,
+                response = self.model.chat(
+                    msgs=[{'role': 'user', 'content': msgs1}],
+                    image=None,
                     context=None,
                     tokenizer=self.tokenizer,
                     sampling=True if gen_kwargs["temperature"] > 0 else False,

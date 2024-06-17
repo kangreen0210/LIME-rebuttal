@@ -142,6 +142,11 @@ def parse_eval_args() -> argparse.Namespace:
         default="Asia/Singapore",
         help="Timezone for datetime string, e.g. Asia/Singapore, America/New_York, America/Los_Angeles",
     )
+    parser.add_argument(
+        "--summary",
+        default=False,
+        help="Timezone for datetime string, e.g. Asia/Singapore, America/New_York, America/Los_Angeles",
+    )
     args = parser.parse_args()
     return args
 
@@ -277,7 +282,10 @@ def cli_evaluate_single(args: Union[argparse.Namespace, None] = None) -> None:
         hash_input = f"{args.model_args}".encode("utf-8")
         hash_output = hashlib.sha256(hash_input).hexdigest()[:6]
         path = Path(args.output_path)
-        path = path.expanduser().resolve().joinpath(f"{datetime_str}_{args.log_samples_suffix}_{args.model}_model_args_{hash_output}")
+        if args.summary:
+            path = path.expanduser().resolve().joinpath(f"{args.log_samples_suffix}_{args.model}")
+        else:
+            path = path.expanduser().resolve().joinpath(f"{datetime_str}_{args.log_samples_suffix}_{args.model}_model_args_{hash_output}")
         args.output_path = path
 
     elif args.log_samples and not args.output_path:
@@ -309,7 +317,10 @@ def cli_evaluate_single(args: Union[argparse.Namespace, None] = None) -> None:
 
         if args.output_path:
             args.output_path.mkdir(parents=True, exist_ok=True)
-            result_file_path = path.joinpath("results.json")
+            if args.summary:
+                result_file_path=path.joinpath(f"results_args_{hash_output}.json")
+            else:
+                result_file_path = path.joinpath("results.json")
             if result_file_path.exists():
                 eval_logger.warning(f"Output file {result_file_path} already exists and will be overwritten.")
 

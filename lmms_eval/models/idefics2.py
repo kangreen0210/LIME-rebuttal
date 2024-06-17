@@ -208,6 +208,8 @@ class Idefics2(lmms):
                 prompt = self._processor.apply_chat_template(message, add_generation_prompt=True)
                 prompts.append(prompt)
             inputs = self._processor(text=prompts, images=visuals, padding=True, return_tensors="pt")
+            if 'max_new_tokens' not in gen_kwargs:
+                gen_kwargs['max_new_tokens']=1024
             inputs = {k: v.to(self.device) for k, v in inputs.items()}
             output_ids = self.model.generate(**inputs, **gen_kwargs)
             # only retain the generated text
