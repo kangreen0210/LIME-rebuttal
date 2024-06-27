@@ -24,12 +24,12 @@ warnings.filterwarnings("ignore")
 from loguru import logger as eval_logger
 
 try:
-    from llava.model.builder import load_pretrained_model
-    from llava.mm_utils import get_model_name_from_path, process_images, tokenizer_image_token
-    from llava.constants import IMAGE_TOKEN_INDEX, DEFAULT_IMAGE_TOKEN
-    from llava.conversation import conv_templates
+    from tinyllava.model import load_pretrained_model
+    from tinyllava.data import ImagePreprocess, TextPreprocess
+    from tinyllava.utils.constants import DEFAULT_IMAGE_TOKEN
+    from tinyllava.utils.message import Message
 except Exception as e:
-    eval_logger.debug("LLaVA is not installed. Please install LLaVA to use this model.\nError: %s" % e)
+    eval_logger.debug("TinyLLaVA_Factory is not installed. Please install TinyLLaVA_Factory to use this model.\nError: %s" % e)
 
 # inference implementation for attention, can be "sdpa", "eager", "flash_attention_2". Seems FA2 is not effective during inference: https://discuss.huggingface.co/t/flash-attention-has-no-effect-on-inference/73453/5
 # if is_flash_attn_2_available:
@@ -41,25 +41,20 @@ else:
     best_fit_attn_implementation = "eager"
 
 
-@register_model("llava")
-class Llava(lmms):
+@register_model("tinyllava")
+class TinyLlava(lmms):
     """
-    Llava Model
+    TinyLlava Model
     """
 
     def __init__(
         self,
-        pretrained: str = "liuhaotian/llava-v1.5-7b",
-        truncation: Optional[bool] = True,
+        pretrained: str = "tinyllava/TinyLLaVA-Phi-2-SigLIP-3.1B",
         device: Optional[str] = "cuda:0",
         batch_size: Optional[Union[int, str]] = 1,
-        model_name=None,
-        attn_implementation=best_fit_attn_implementation,
         device_map="cuda:0",
-        conv_template="vicuna_v1",
+        conv_mode="phi",  # TODO
         use_cache=True,
-        truncate_context=False,  # whether to truncate the context in generation, set it False for LLaVA-1.6
-        customized_config=None,  # ends in json
         **kwargs,
     ) -> None:
         super().__init__()
@@ -78,31 +73,21 @@ class Llava(lmms):
             self._device = torch.device(f"cuda:{accelerator.local_process_index}")
             self.device_map = f"cuda:{accelerator.local_process_index}"
 
-        llava_model_args = {
-            "multimodal": True,
-        }
-        if customized_config is not None:
-            llava_model_args["customized_config"] = customized_config
-        if attn_implementation is not None:
-            llava_model_args["attn_implementation"] = attn_implementation
-        if "use_flash_attention_2" in kwargs:
-            llava_model_args["use_flash_attention_2"] = kwargs["use_flash_attention_2"]
-        model_name = model_name if model_name is not None else get_model_name_from_path(pretrained)
-        try:
-            # Try to load the model with the multimodal argument
-            self._tokenizer, self._model, self._image_processor, self._max_length = load_pretrained_model(pretrained, None, model_name, device_map=self.device_map, **llava_model_args)
-        except TypeError:
-            # for older versions of LLaVA that don't have multimodal argument
-            llava_model_args.pop("multimodal", None)
-            self._tokenizer, self._model, self._image_processor, self._max_length = load_pretrained_model(pretrained, None, model_name, device_map=self.device_map, **llava_model_args)
+        self._model, self._tokenizer, self._image_processor, self._max_length = load_pretrained_model(pretrained, device_map=self.device_map)
+        data_args = self._model.config
+        self._image_processor = ImagePreprocess(self._image_processor, data_args)
+        assert self._tokenizer.padding_side == "right", "Not sure but seems like `right` is a natural choice for padding?"
+        self._text_processor = TextPreprocess(self._tokenizer, conv_mode)
+
         self._config = self._model.config
         self.model.eval()
         self.model.tie_weights()
-        self.truncation = truncation
+        # self.truncation = truncation
         self.batch_size_per_gpu = int(batch_size)
-        self.conv_template = conv_template
+        # self.conv_template = conv_template
         self.use_cache = use_cache
-        self.truncate_context = truncate_context
+        # self.truncate_context = truncate_context
+
         # assert self.batch_size_per_gpu == 1, "Llava currently does not support batched generation. See https://github.com/haotian-liu/LLaVA/issues/754. HF Llava also has this issue."
         if accelerator.num_processes > 1:
             assert accelerator.distributed_type in [DistributedType.FSDP, DistributedType.MULTI_GPU, DistributedType.DEEPSPEED], "Unsupported distributed type provided. Only DDP and FSDP are supported."
@@ -201,6 +186,13 @@ class Llava(lmms):
         except:
             return self.tokenizer.decode([tokens])
 
+    def flatten(self, input):
+        new_list = []
+        for i in input:
+            for j in i:
+                new_list.append(j)
+        return new_list
+
     def loglikelihood(self, requests: List[Instance]) -> List[Tuple[float, bool]]:
         # TODO
         res = []
@@ -216,9 +208,13 @@ class Llava(lmms):
             visuals = self.flatten(visuals)
             image_sizes = [[visual.size[0], visual.size[1]] for visual in visuals]
             if visuals:
-                image = process_images(visuals, self._image_processor, self._config)
+                # https://github.com/zjysteven/TinyLLaVA_Factory/blob/main/tinyllava/data/image_preprocess.py
+                # tinyllava's image processor seems to take each individual image as input
+                image = [self._image_processor(v) for v in visuals]
                 if type(image) is list:
                     image = [_image.to(dtype=torch.float16, device=self.device) for _image in image]
+                    # as of 2024/06, tinyllava only accepts `images` input to be a tensor
+                    image = torch.stack(image)
                 else:
                     image = image.to(dtype=torch.float16, device=self.device)
             else:
@@ -237,24 +233,17 @@ class Llava(lmms):
                 image_tokens = " ".join(image_tokens)
                 prompts_input = image_tokens + "\n" + (contexts[0] if isinstance(contexts, list) else contexts)
 
-            # This is much safer for llama3, as we now have some object type in it
-            if "llama_3" in self.conv_template:
-                conv = copy.deepcopy(conv_templates[self.conv_template])
-            else:
-                conv = conv_templates[self.conv_template].copy()
-            conv.append_message(conv.roles[0], prompts_input)
-            conv.append_message(conv.roles[1], None)
-            prompt = conv.get_prompt()
-            pad_token_id = self.tokenizer.pad_token_id if self.tokenizer.pad_token_id is not None else self.tokenizer.eos_token_id
-            contxt_id = tokenizer_image_token(prompt, self.tokenizer, IMAGE_TOKEN_INDEX, return_tensors="pt").unsqueeze(0).to(self.device)
+            msg = Message()
+            msg.add_message(prompts_input)
+            contxt_id = self._text_processor(msg.messages, mode="eval")["input_ids"]
             # Add the answer of the second role
-            conv.messages[1][1] = continuation
+            msg._messages[1]["value"] = continuation
+            input_ids = self._text_processor(msg.messages, mode="eval")["input_ids"]
 
-            prompt = conv.get_prompt()
-            input_ids = tokenizer_image_token(prompt, self.tokenizer, IMAGE_TOKEN_INDEX, return_tensors="pt").unsqueeze(0).to(self.device)
             labels = input_ids.clone()
             # Context part no need to calculate for loss
             labels[0, : contxt_id.shape[1]] = -100
+
             with torch.inference_mode():
                 outputs = self.model(input_ids=input_ids, labels=labels, images=image, use_cache=True, image_sizes=image_sizes)
             loss = outputs["loss"]
@@ -268,13 +257,6 @@ class Llava(lmms):
             pbar.update(1)
         pbar.close()
         return res
-
-    def flatten(self, input):
-        new_list = []
-        for i in input:
-            for j in i:
-                new_list.append(j)
-        return new_list
 
     def generate_until(self, requests: List[Instance]) -> List[str]:
         res = []
@@ -323,9 +305,11 @@ class Llava(lmms):
                 eval_logger.info(f"Setting image aspect ratio: {self._config.image_aspect_ratio}")
             # encode, pad, and truncate contexts for this batch
             if flattened_visuals:
-                image_tensor = process_images(flattened_visuals, self._image_processor, self._config)
+                image_tensor = [self._image_processor(v) for v in flattened_visuals]
                 if type(image_tensor) is list:
                     image_tensor = [_image.to(dtype=torch.float16, device=self.device) for _image in image_tensor]
+                    # as of 2024/06, tinyllava only accepts `images` input to be a tensor
+                    image_tensor = torch.stack(image_tensor)
                 else:
                     image_tensor = image_tensor.to(dtype=torch.float16, device=self.device)
             else:
@@ -348,15 +332,22 @@ class Llava(lmms):
                     question = image_tokens + "\n" + context
                 else:
                     question = context
-                # This is much safer for llama3, as we now have some object type in it
-                if "llama_3" in self.conv_template:
-                    conv = copy.deepcopy(conv_templates[self.conv_template])
-                else:
-                    conv = conv_templates[self.conv_template].copy()
-                conv.append_message(conv.roles[0], question)
-                conv.append_message(conv.roles[1], None)
-                prompt_question = conv.get_prompt()
+
+                msg = Message()
+                msg.add_message(question)
+                prompt_question = self._text_processor(msg.messages, mode="eval")["prompt"]
                 question_input.append(prompt_question)
+
+            # The above for loop has bugs. When there is no visuals, e.g. pure text,
+            # there will be no for loop execute resulting in an empty question_input (because no visuals)
+            # Scenario 1 won't even be execute
+            if len(flattened_visuals) == 0:
+                for context in contexts:
+                    question = context
+                    msg = Message()
+                    msg.add_message(question)
+                    prompt_question = self._text_processor(msg.messages, mode="eval")["prompt"]
+                    question_input.append(prompt_question)
 
             # input_ids = tokenizer_image_token(prompt, self.tokenizer, IMAGE_TOKEN_INDEX, return_tensors="pt").unsqueeze(0).to(self.device)
             # preconfigure gen_kwargs with defaults
@@ -370,7 +361,8 @@ class Llava(lmms):
             if "num_beams" not in gen_kwargs:
                 gen_kwargs["num_beams"] = 1
 
-            input_ids_list = [tokenizer_image_token(prompt, self.tokenizer, IMAGE_TOKEN_INDEX, return_tensors="pt") for prompt in question_input]
+            # input_ids_list = [tokenizer_image_token(prompt, self.tokenizer, IMAGE_TOKEN_INDEX, return_tensors="pt") for prompt in question_input]
+            input_ids_list = [self._text_processor.template.tokenizer_image_token(prompt, self.tokenizer, return_tensors="pt") for prompt in question_input]
             pad_token_ids = self.tokenizer.pad_token_id if self.tokenizer.pad_token_id is not None else self.tokenizer.eos_token_id
             input_ids = self.pad_sequence(input_ids_list, batch_first=True, padding_value=pad_token_ids).to(self.device)
             attention_masks = input_ids.ne(pad_token_ids).to(self.device)
