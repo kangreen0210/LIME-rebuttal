@@ -1,0 +1,1 @@
+from idefics2 import Idefics2
