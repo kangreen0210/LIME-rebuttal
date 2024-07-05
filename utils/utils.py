@@ -181,7 +181,7 @@ def evaluate(
             for metric, value in metrics.items():
                 vals[(task_name, 'none', metric)].append(value)
             ###################### stop print
-            print(len(vals[(task_name, 'none', metric)]))
+        print(len(vals[(task_name, 'none', metric)]))
 
         ### Get task ordering for correct sample-wide aggregation
     group_to_task = {}
@@ -373,10 +373,10 @@ def evaluate(
 
 
 if __name__=='__main__':
-    root_dir='/ML-A100/team/mm/zk/lmms-eval/logs_new/chartqa'
-    tasks=['chartqa']
-    filter_difficulty=['delete','easy'] #delete easy middle difficult very difficult  总共有多少条
-    # filter_difficulty=['delete','easy','middle']
+    root_dir='/ML-A100/team/mm/zk/lmms-eval/logs_new/new_pope'
+    tasks=['pope']
+    # filter_difficulty=['delete','easy'] #delete easy middle difficult very difficult  总共有多少条
+    filter_difficulty=['duplicated','delete','easy','middle']
     for root, _, files in os.walk(root_dir):
         for file in files:
             if file.endswith('.json'):

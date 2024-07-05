@@ -5,7 +5,7 @@ import random
 import numpy as np
 import os
 import json
-
+from PIL import Image
 
 from lmms_eval.tasks._task_utils.file_utils import generate_submission_file
 
@@ -53,6 +53,9 @@ def mmmu_doc_to_visual(doc):
     # Remove <> and  swap space as _
     image_tokens = sorted(list(set([image_token.strip("<>").replace(" ", "_") for image_token in image_tokens])))
     visual = [doc[image_token].convert("RGB") for image_token in image_tokens]
+    # no sense
+    # image_path = "/ML-A100/public/run/research/gjw/lmms-eval/no_sense.jpg"
+    # visual = [Image.open(image_path).convert("RGB") for image_token in image_tokens]
     return visual
 
 

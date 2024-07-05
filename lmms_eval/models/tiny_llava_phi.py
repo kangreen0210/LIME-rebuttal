@@ -41,7 +41,7 @@ else:
     best_fit_attn_implementation = "eager"
 
 
-@register_model("tinyllava")
+@register_model("tiny_llava")
 class TinyLlava(lmms):
     """
     TinyLlava Model
@@ -49,11 +49,11 @@ class TinyLlava(lmms):
 
     def __init__(
         self,
-        pretrained: str = "tinyllava/TinyLLaVA-Phi-2-SigLIP-3.1B",
+        pretrained: str = "/ML-A100/team/mm/zk/models/tiny-llava-v1-hf",
         device: Optional[str] = "cuda:0",
         batch_size: Optional[Union[int, str]] = 1,
         device_map="cuda:0",
-        conv_mode="phi",  # TODO
+        conv_mode="tinyllama",  # TODO
         use_cache=True,
         **kwargs,
     ) -> None:

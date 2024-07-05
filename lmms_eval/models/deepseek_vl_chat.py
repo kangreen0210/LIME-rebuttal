@@ -18,19 +18,25 @@ warnings.simplefilter("ignore", category=DeprecationWarning)
 warnings.filterwarnings("ignore")
 
 eval_logger = logging.getLogger("lmms-eval")
-from transformers import AutoModelForCausalLM, AutoTokenizer, LlamaTokenizer
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+try:
+    from deepseek_vl.models import VLChatProcessor, MultiModalityCausalLM
+    from deepseek_vl.utils.io import load_pil_images
+except ImportError:
+    eval_logger.debug("Deepseek-VL is not installed. Please install the environment to use this model.")
 
 
-@register_model("cogvlm_chat")
-class CogVLM_Chat(lmms):
+@register_model("deepseek_vl_chat")
+class Deepseek_VL_Chat(lmms):
     """
-    CogVLM Model
-    https://github.com/THUDM/CogVLM
+    Deepseek_VL_Chat Model
+    https://github.com/deepseek-ai/DeepSeek-VL
     """
 
     def __init__(
         self,
-        pretrained: str = "THUDM/cogvlm-chat-hf",
+        pretrained: str = "deepseek-ai/deepseek-vl-7b-chat",
         device: Optional[str] = "cuda",
         batch_size: Optional[Union[int, str]] = 1,
         low_cpu_mem_usage=True,
@@ -47,12 +53,12 @@ class CogVLM_Chat(lmms):
             self._device = torch.device(f"cuda:{accelerator.local_process_index}")
         else:
             self._device = device
-        self._tokenizer = LlamaTokenizer.from_pretrained('lmsys/vicuna-7b-v1.5')
-        self._model = AutoModelForCausalLM.from_pretrained(pretrained, torch_dtype=torch.bfloat16, device_map=self._device, low_cpu_mem_usage=low_cpu_mem_usage, trust_remote_code=trust_remote_code) # .eval()
-        # self._tokenizer = AutoTokenizer.from_pretrained(pretrained, trust_remote_code=trust_remote_code)
-        # self.tokenizer.padding_side = "left"
-        # self.tokenizer.pad_token_id = self.tokenizer.eod_id
-        # self.prompt = "<img>{}</img>{}"
+
+        self.vl_chat_processor = VLChatProcessor.from_pretrained(pretrained)
+        self._tokenizer = self.vl_chat_processor.tokenizer
+
+        self._model = AutoModelForCausalLM.from_pretrained(pretrained, torch_dtype=torch.bfloat16, device_map=self._device, trust_remote_code=True)
+
         self._config = self._model.config
         self.model.eval()
         # self.model.tie_weights() # TODO: confirm if we need this
@@ -136,21 +142,6 @@ class CogVLM_Chat(lmms):
                 continuation = doc_to_target(self.task_dict[task][split][doc_id])
             visuals = [doc_to_visual(self.task_dict[task][split][doc_id])]
             visuals = self.flatten(visuals)
-            # query = []
-            # visual_paths = []
-            # for visual in visuals:
-            #     name = uuid.uuid4().hex.upper()[0:6]
-            #     visual.save(f"/tmp/{name}.png")
-            #     visual_paths.append(f"/tmp/{name}.png")
-            #     query.append({"image": f"/tmp/{name}.png"})
-
-            # Make a copy for query to save context (text that needs to be masked)
-            # context_query = [_ for _ in query]
-            # context_query.append({"text": contexts})
-            # query.append({"text": contexts + continuation})
-
-            # context_query = self.tokenizer.from_list_format(context_query)
-            # query = self.tokenizer.from_list_format(query)
 
             if "<image>" in contexts:
                 # instruct blip does not expect the <image> tag
@@ -160,21 +151,6 @@ class CogVLM_Chat(lmms):
             inputs = self.model.build_conversation_input_ids(self.tokenizer, query=contexts + continuation, history=[], images=visuals)  # chat mode
 
             context_length = context_inputs['input_ids'].shape[0]-1
-
-            # raw_contxt_text, context_tokens = make_context(
-            #     self.tokenizer, context_query, history=None, system="You are a helpful assistant", max_window_size=self.model.generation_config.max_window_size, chat_format=self.model.generation_config.chat_format
-            # )
-            # context_tokens = torch.tensor([context_tokens])
-
-            # raw_continuation_text, continuation_tokens = make_context(
-            #     self.tokenizer, query, history=None, system="You are a helpful assistant", max_window_size=self.model.generation_config.max_window_size, chat_format=self.model.generation_config.chat_format
-            # )
-
-            # continuation_tokens = torch.tensor([continuation_tokens]).to(self.model.device)
-            # attn_mask = torch.ones_like(continuation_tokens).to(self.model.device)
-            # labels = continuation_tokens.clone().to(self.model.device)
-            # labels[:, : context_tokens.shape[1]] = -100
-
             context_inputs = {
                 'input_ids': context_inputs['input_ids'].unsqueeze(0).to(self._device),
                 'token_type_ids': context_inputs['token_type_ids'].unsqueeze(0).to(self._device),
@@ -239,14 +215,14 @@ class CogVLM_Chat(lmms):
             split = split[0]
             visuals = [doc_to_visual[0](self.task_dict[task][split][ids]) for ids in doc_id]
             visuals = self.flatten(visuals)
-            # visual_paths = []
-            # # save images to /tmp, name generated by hash function
-            # # qwen accept image path. Have to do it here....
-            # for visual in visuals:
-            #     name = uuid.uuid4().hex.upper()[0:6]
-            #     visual.save(f"/tmp/{name}.png")
-            #     visual_paths.append(f"/tmp/{name}.png")
-
+            visual_paths = []
+            # save images to /tmp, name generated by hash function
+            # deepseek-vl accept image path. Have to do it here....
+            for visual in visuals:
+                name = uuid.uuid4().hex.upper()[0:6]
+                visual.save(f"/tmp/{name}.png")
+                visual_paths.append(f"/tmp/{name}.png")
+            assert len(visual_paths) == 1, 'the current Deepseek-VL model supports only single image'
             # we assume all gen kwargs in the batch are the same
             # this is safe to assume because the `grouper` object ensures it.
             gen_kwargs = all_gen_kwargs[0]
@@ -273,31 +249,29 @@ class CogVLM_Chat(lmms):
             # if not truncate, some questions will cause size mismatch
             # The transformer implementation can't handle multi images for blip
             # Concat it into one image
-            if len(visuals) > 1:
-                visuals = [process_images(visuals)]
+            # if len(visuals) > 1:
+            #     visuals = [process_images(visuals)]
 
-            # # Similar to llava, is visual paths has len 0
-            # # Then nothing will be executed
-            # query = []
-            # if len(visual_paths) == 0:
-            #     for context in contexts:
-            #         query.append({"text": context})
-            # else:
-            #     for visual_path, context in zip(visual_paths, contexts):
-            #         query.append({"image": visual_path})
-            #         query.append({"text": context})
-
-            # questions = self.tokenizer.from_list_format(query)
-            # input_ids = self.tokenizer(questions, return_tensors="pt", padding="longest")
-
-            inputs = self.model.build_conversation_input_ids(self.tokenizer, query=context, history=[], images=visuals)  # chat mode
-            inputs = {
-                'input_ids': inputs['input_ids'].unsqueeze(0).to(self._device),
-                'token_type_ids': inputs['token_type_ids'].unsqueeze(0).to(self._device),
-                'attention_mask': inputs['attention_mask'].unsqueeze(0).to(self._device),
-                'images': [[inputs['images'][0].to(self._device).to(torch.bfloat16)]],
-            }
-
+            conversation = [
+                {
+                    "role": "User",
+                    "content": "<image_placeholder>"+context,
+                    "images": visual_paths,
+                },
+                {
+                    "role": "Assistant",
+                    "content": ""
+                }
+            ]
+            # load images and prepare for inputs
+            pil_images = load_pil_images(conversation)
+            prepare_inputs = self.vl_chat_processor(
+                conversations=conversation,
+                images=pil_images,
+                force_batchify=True
+            ).to(self.model.device)
+            # run image encoder to get the image embeddings
+            inputs_embeds = self.model.prepare_inputs_embeds(**prepare_inputs)
             # preconfigure gen_kwargs with defaults
             # if "image_sizes" not in gen_kwargs:
             #     try:
@@ -313,55 +287,30 @@ class CogVLM_Chat(lmms):
             if "num_beams" not in gen_kwargs:
                 gen_kwargs["num_beams"] = 1
 
-            # pad_token_id = self.tokenizer.pad_token_id if self.tokenizer.pad_token_id is not None else self.tokenizer.eod_id
+            # pad_token_id=tokenizer.eos_token_id
+            # bos_token_id=tokenizer.bos_token_id
+            # eos_token_id=tokenizer.eos_token_id
+            if "pad_token_id" not in gen_kwargs:
+                gen_kwargs["pad_token_id"]=self.tokenizer.eos_token_id
+            if "bos_token_id" not in gen_kwargs:
+                gen_kwargs["bos_token_id"]=self.tokenizer.bos_token_id
+            if "eos_token_id" not in gen_kwargs: 
+                gen_kwargs["eos_token_id"]=self.tokenizer.eos_token_id
+
             try:
-                cont = self.model.generate(**inputs, **gen_kwargs)
+                cont = self.model.language_model.generate(
+                    inputs_embeds=inputs_embeds,
+                    attention_mask=prepare_inputs.attention_mask,
+                    **gen_kwargs)
             except Exception as e:
                 eval_logger.error(f"Error {e} in generating")
                 cont = ""
-            cont = cont[:, inputs['input_ids'].shape[1]:]
-            text_outputs = self.tokenizer.decode(cont[0],skip_special_tokens=True).strip()
+            text_outputs = self.tokenizer.decode(cont[0].cpu().tolist(), skip_special_tokens=True).strip()
             res.append(text_outputs)
             print(text_outputs)
             self.cache_hook.add_partial("generate_until", (context, gen_kwargs), text_outputs)
             pbar.update(1)
-            
-            # cont = self.model.generate(
-            #     input_ids.input_ids.to(self.device),
-            #     attention_mask=input_ids.attention_mask.to(self.device),
-            #     eos_token_id=self.tokenizer.eod_id,
-            #     pad_token_id=pad_token_id,
-            #     do_sample=True if gen_kwargs["temperature"] > 0 else False,
-            #     temperature=gen_kwargs["temperature"],
-            #     top_p=gen_kwargs["top_p"],
-            #     num_beams=gen_kwargs["num_beams"],
-            #     max_new_tokens=gen_kwargs["max_new_tokens"],
-            #     use_cache=self.use_cache,
-            #     # kwargs=gen_kwargs
-            # )
-
-            # cont_toks_list = cont.tolist()
-            # for cont_toks, context in zip(cont_toks_list, contexts):
-            #     # discard context + left-padding toks if using causal decoder-only LMM
-            #     cont_toks = cont_toks[input_ids.input_ids.shape[1] :]
-            #     text_outputs = self.tokenizer.decode(cont_toks, skip_special_tokens=True).strip()
-            #     for term in until:
-            #         if len(term) > 0:
-            #             # ignore '' separator,
-            #             # for seq2seq case where self.tok_decode(self.eot_token_id) = ''
-            #             text_outputs = text_outputs.split(term)[0]
-
-            #     res.append(text_outputs)
-
-            #     self.cache_hook.add_partial("generate_until", (context, gen_kwargs), text_outputs)
-            #     # remove visuals from tmp
-            #     for visual_path in visual_paths:
-            #         try:
-            #             os.remove(visual_path)
-            #         except:
-            #             pass
-            #     pbar.update(1)
-            # reorder this group of results back to original unsorted form
+        
         res = re_ords.get_original(res)
 
         pbar.close()

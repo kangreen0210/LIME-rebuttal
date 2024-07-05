@@ -3,7 +3,6 @@ import os
 import hf_transfer
 from loguru import logger
 import sys
-
 logger.remove()
 logger.add(sys.stdout, level="WARNING")
 
@@ -32,9 +31,14 @@ AVAILABLE_MODELS = {
     "phi3v": "Phi3v",
     "xcomposer2_4KHD":"XComposer2_4KHD",
     "cogvlm_chat":"CogVLM_Chat",
-    "tinyllava": "TinyLlava",
+    "deepseek_vl_chat":"Deepseek_VL_Chat",
+    "tiny_llava": "TinyLlava",
     "llava_hf": "LlavaHf",
     "longva": "LongVA",
+    "bunny_3b":"Bunny_3B",
+    "vicuna_7b":"Vicuna_7b",
+    "vicuna_33b":"Vicuna_33b",
+    "yi":"Yi"
 }
 
 for model_name, model_class in AVAILABLE_MODELS.items():

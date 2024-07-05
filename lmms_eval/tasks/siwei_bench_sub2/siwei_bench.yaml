@@ -1,0 +1,8 @@
+group: siwei_bench_sub2
+task:
+- siwei_bench_atlocation
+- siwei_bench_environment
+- siwei_bench_madeof
+- siwei_bench_nearby
+- siwei_bench_partof
+
