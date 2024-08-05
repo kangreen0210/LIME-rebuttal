@@ -1,0 +1,7 @@
+group: siwei_bench_sub3_vd
+task:
+- siwei_bench_shapesimilarto_vd
+- siwei_bench_subevent_vd
+- siwei_bench_similar_event_vd
+- siwei_bench_hasproperty_vd
+

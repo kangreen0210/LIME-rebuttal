@@ -1,8 +1,8 @@
-dataset_path: lmms-lab/POPE
+dataset_path: /ML-A100/team/mm/zk/lmms-eval/vlms-bench-data-jsonl/POPE/
 dataset_kwargs:
   token: True
-task: "pope"
-test_split: test
+task: "pope_suit"
+test_split: train
 output_type: generate_until
 doc_to_visual: !function utils.pope_doc_to_visual
 doc_to_text: !function utils.pope_doc_to_text

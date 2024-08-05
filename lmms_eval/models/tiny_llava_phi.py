@@ -41,8 +41,8 @@ else:
     best_fit_attn_implementation = "eager"
 
 
-@register_model("tiny_llava")
-class TinyLlava(lmms):
+@register_model("tiny_llava_phi")
+class TinyLlava_phi(lmms):
     """
     TinyLlava Model
     """

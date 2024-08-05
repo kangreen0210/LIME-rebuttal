@@ -60,7 +60,6 @@ def extract_yes_no(response):
         max_count = most_common[0][1]
         candidates = [item for item in most_common if item[1] == max_count]
         return candidates[-1][0]
-    
     # 返回匹配项列表
     return None
     

@@ -13,6 +13,7 @@ AVAILABLE_MODELS = {
     "batch_gpt4": "BatchGPT4",
     "gpt4v": "GPT4V",
     "instructblip": "InstructBLIP",
+    "minicpm_v25":"MiniCPM_V25",
     "minicpm_v": "MiniCPM_V",
     "llava_vid": "LlavaVid",
     "videoChatGPT": "VideoChatGPT",
@@ -33,12 +34,21 @@ AVAILABLE_MODELS = {
     "cogvlm_chat":"CogVLM_Chat",
     "deepseek_vl_chat":"Deepseek_VL_Chat",
     "tiny_llava": "TinyLlava",
+    "tiny_llava_phi": "TinyLlava_phi",
     "llava_hf": "LlavaHf",
     "longva": "LongVA",
     "bunny_3b":"Bunny_3B",
     "vicuna_7b":"Vicuna_7b",
     "vicuna_33b":"Vicuna_33b",
-    "yi":"Yi"
+    "yi":"Yi",
+    "qwen":"Qwen",
+    'llama':"Llama",
+    "gemma":"Gemma",
+    "cambrian_8b":"Cambrian_8b",
+    "internvl2": "InternVL2",
+    "mantis": "Mantis",
+    "emu2": "Emu2",
+    "paligemma":"Paligemma",
 }
 
 for model_name, model_class in AVAILABLE_MODELS.items():

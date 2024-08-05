@@ -2,3 +2,4 @@ group: mmmu_group_img
 task:
 - mmmu_val_group_img
 - mmmu_test_group_img
+- mmmu_aug_group_img

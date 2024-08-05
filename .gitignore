@@ -51,6 +51,10 @@ double_check/
 vlms-bench-data/
 vlms-bench-data-difficult/
 vlms-bench-data-selected/
+vlms-bench-data-selected_bak/
+vlms-bench-data-selected-VD/
+vlms-bench-data-selected-VD-bak/
+vlms-bench-data-VD/
 vlms-bench-data-jsonl/
 logs_new/
 logs_text_only/
@@ -59,5 +63,9 @@ logs_text_only/
 *.log
 *.jpg
 *.txt
+final_bench/
+gemini_flash/
+tmp/
 
+clip-vit-base-patch32
 lmms_eval/tasks/vatex/__pycache__/utils.cpython-310.pyc

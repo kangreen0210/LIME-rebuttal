@@ -1,0 +1,3 @@
+group : coco_cap_suit_vd
+task:
+  - coco2017_cap_suit_val_vd

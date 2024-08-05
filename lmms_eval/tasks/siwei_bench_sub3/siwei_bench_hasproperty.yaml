@@ -6,9 +6,11 @@ doc_to_visual: !function utils.siwei_bench_doc_to_visual
 doc_to_text: !function utils.siwei_bench_doc_to_text
 doc_to_target: "answer"
 generation_kwargs:
-  max_new_tokens: 32
+  max_new_tokens: 128
   temperature: 0
-  do_sample: False
+  top_p: 1.0
+  num_beams: 1
+  do_sample: false
 process_results: !function utils.siwei_bench_process_results
 metric_list:
   - metric: exact_match

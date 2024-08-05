@@ -326,12 +326,13 @@ class LlavaHf(lmms):
                 text_outputs = text_outputs.split("ASSISTANT:")[-1].strip()
             elif "mistral" in self.pretrained:
                 text_outputs = text_outputs.split("[/INST]")[-1].strip()
+            elif "tiny-llava" in self.pretrained:
+                text_outputs = text_outputs.split("<|assistant|>\n")[-1].strip()
             else:
                 text_outputs = text_outputs.split("ASSISTANT:")[-1].strip()
 
             if self.accelerator.is_main_process and doc_id[0] % 100 == 0:
                 eval_logger.debug(f"Generated text for doc ID {doc_id[0]}:\n\n{text_outputs}\n")
-
             res.append(text_outputs)
             self.cache_hook.add_partial("generate_until", (context, gen_kwargs), text_outputs)
             pbar.update(1)

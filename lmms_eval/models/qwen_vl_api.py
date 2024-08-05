@@ -23,14 +23,21 @@ try:
 except:
     eval_logger.debug("Can not import Dashscope")
 
-API_KEY = os.getenv("DASHSCOPE_API_KEY", "YOUR_API_KEY")
+API_KEY = os.getenv("DASHSCOPE_API_KEY", "sk-9fd045badc2f44898d8f72c95565ff50")
+def clear_proxies():
+    # 删除所有与代理相关的环境变量
+    for var in ['http_proxy', 'https_proxy', 'HTTP_PROXY', 'HTTPS_PROXY']:
+        if var in os.environ:
+            del os.environ[var]
 
+# 调用函数以清除代理设置
 
 @register_model("qwen-vl-api")
 class Qwen_VL_API(lmms):
     def __init__(
         self,
         model_version: str = "qwen-vl-max",
+        # model_version: str = "Qwen/Qwen-VL-Max",
         image_token: str = "<image>",  # Use to separate interleaved image and text
         system_prompt: str = "",  # Whether you want some special system prompt here
         tmp_folder: str = "./tmp",  # Due to qwen's api restriction,
@@ -42,6 +49,7 @@ class Qwen_VL_API(lmms):
         self.image_token = image_token
         self.system_prompt = system_prompt
         self.tmp_folder = tmp_folder
+        clear_proxies()
 
     @property
     def rank(self):
@@ -52,6 +60,12 @@ class Qwen_VL_API(lmms):
         return self._world_size
 
     def generate_until(self, requests) -> List[str]:
+        clear_proxies()
+        if "http_proxy" in os.environ:
+            del os.environ['http_proxy']
+        if "https_proxy" in os.environ:
+            del os.environ['https_proxy']
+        print("HTTP and HTTPS proxy settings have been unset.")
         res = []
         pbar = tqdm(total=len(requests), disable=(self.rank != 0), desc="Model Responding")
         os.makedirs(self.tmp_folder, exist_ok=True)
@@ -89,12 +103,18 @@ class Qwen_VL_API(lmms):
             if "num_beams" not in gen_kwargs:
                 gen_kwargs["num_beams"] = 1
 
-            for attempt in range(5):
+            for attempt in range(10):
                 try:
+                    # print(gen_kwargs["max_new_tokens"])
+                    # print(API_KEY)
+                    # print(messages)
+                    print(self.model_version)
                     response_data = dashscope.MultiModalConversation.call(model=self.model_version, messages=messages, api_key=API_KEY, max_length=gen_kwargs["max_new_tokens"])
+                    print(response_data)
+                    break
                 except Exception as e:
                     eval_logger.info(f"Attempt {attempt + 1} failed with error: {str(e)}")
-                    if attempt < 5 - 1:  # If we have retries left, sleep and then continue to next attempt
+                    if attempt < 10 - 1:  # If we have retries left, sleep and then continue to next attempt
                         time.sleep(NUM_SECONDS_TO_SLEEP)
                     else:  # If this was the last attempt, log and return empty
                         eval_logger.error(f"All 5 attempts failed. Last error message: {str(e)}")
