@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 dataset_path: /xpfs/public/gezhang/zk/MMIR_codebase/Mantis/final_bench_hf_img_2_1/ShapeSimilarTo
+=======
+dataset_path: /ML-A100/team/mm/zk/MMIR_codebase/Mantis/final_bench_hf_img_2_1/ShapeSimilarTo
+>>>>>>> 865c7069caf994108f2fb1c2648cb346c8741a4e
 task: "siwei_bench_shapesimilarto_shuffle"
 test_split: train
 output_type: generate_until

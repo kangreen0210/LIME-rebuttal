@@ -1,0 +1,100 @@
+<script type="text/javascript">
+  var dom = document.getElementById('container');
+  var myChart = echarts.init(dom, null, {
+    renderer: 'svg',
+    useDirtyRect: false
+  });
+  var app = {};
+  
+  var option;
+
+  option = {
+    title: {
+      text: 'Basic Radar Chart'
+    },
+    legend: {
+      data: [
+        'llava1.6_34b',
+        'llava_llama3',
+        'cogvlm',
+        'deepseek-vl',
+        'idefics2',
+        'minicpm-llama3-v-2.5',
+        'instructblip-vicuna-7b',
+        'internvl-v1.5',
+        'xcomposer'
+      ]
+    },
+    radar: {
+      indicator: [
+        { name: 'captioning', max: 100 },
+        { name: 'T/F reasoning', max: 100 },
+        { name: 'Normal VQA', max: 100 },
+        { name: 'Info Understanding QA', max: 100 },
+        { name: 'Science QA', max: 100 },
+        { name: 'OCR', max: 100 }
+      ]
+    },
+    series: [
+      {
+        name: 'Budget vs spending',
+        type: 'radar',
+        data: [
+          {
+            value: [66.25, 47.0, 30.8, 53.208, 53.077, 17.1],
+            name: 'llava1.6_34b'
+          },
+          {
+            value: [74.031, 44.244, 37.363, 43.333, 45.555, 13.9],
+            name: 'llava_llama3'
+          },
+          {
+            value: [33.922, 55.1, 51.45, 59.458, 36.538, 19.3],
+            name: 'cogvlm'
+          },
+          {
+            value: [68.716, 48.5, 34.9, 38.5, 44.231, 11.7],
+            name: 'deepseek-vl'
+          },
+          {
+            value: [77.87, 42.0, 46.05, 18.5, 47.462, 19.6],
+            name: 'idefics2'
+          },
+          {
+            value: [35.887, 43.1, 43.55, 58.55, 6.6, 25.7],
+            name: 'minicpm-llama3-v-2.5'
+          },
+          {
+            value: [77.612, 45.1, 16.75, 6.042, 24.769, 2.0],
+            name: 'instructblip-vicuna-7b'
+          },
+          {
+            value: [90.934, 51.693, 52.675, 78.958, 42.162, 27.9],
+            name: 'internvl-v1.5'
+          },
+          {
+            value: [87.568, 46.275, 44.217, 73.292, 58.382, 24.4],
+            name: 'xcomposer'
+          }
+        ]
+      }
+    ]
+  };
+
+  if (option && typeof option === 'object') {
+    myChart.setOption(option);
+  }
+
+  window.addEventListener('resize', myChart.resize);
+
+  function downloadSVG() {
+    var url = myChart.getDataURL({
+      type: 'svg',
+      backgroundColor: '#fff'
+    });
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'chart.svg';
+    a.click();
+  }
+</script>

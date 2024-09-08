@@ -12,7 +12,11 @@ from accelerate import Accelerator, DistributedType
 from lmms_eval.api.model import lmms
 from tqdm import tqdm
 import logging
+<<<<<<< HEAD
 import math
+=======
+
+>>>>>>> 865c7069caf994108f2fb1c2648cb346c8741a4e
 eval_logger = logging.getLogger("eval_logger")
 
 IMAGENET_MEAN = (0.485, 0.456, 0.406)
@@ -121,6 +125,7 @@ from datetime import timedelta
 from accelerate.state import AcceleratorState
 from accelerate.utils import InitProcessGroupKwargs
 
+<<<<<<< HEAD
 # def split_model(model_name):
 #     device_map = {}
 #     world_size = 8
@@ -145,6 +150,8 @@ from accelerate.utils import InitProcessGroupKwargs
 #     device_map['language_model.lm_head'] = 0
 #     device_map[f'language_model.model.layers.{num_layers - 1}'] = 0
 #     return device_map
+=======
+>>>>>>> 865c7069caf994108f2fb1c2648cb346c8741a4e
 
 @register_model("internvl2")
 class InternVL2(lmms):
@@ -166,7 +173,11 @@ class InternVL2(lmms):
         batch_size = int(batch_size)
         assert batch_size == 1, f"Batch size should be 1 for InternVL2, but got {batch_size}."
         self.batch_size_per_gpu = batch_size
+<<<<<<< HEAD
         model_key=self.path.split('/')[-1]
+=======
+
+>>>>>>> 865c7069caf994108f2fb1c2648cb346c8741a4e
         accelerator_kwargs = InitProcessGroupKwargs(timeout=timedelta(weeks=52))
         accelerator = Accelerator(kwargs_handlers=[accelerator_kwargs])
         self.accelerator = accelerator

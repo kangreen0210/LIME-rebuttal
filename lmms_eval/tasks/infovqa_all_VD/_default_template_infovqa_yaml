@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 dataset_path: ./vlms-bench-data-jsonl/infovqa/
+=======
+dataset_path: /ML-A100/team/mm/zk/lmms-eval/vlms-bench-data-jsonl/infovqa/
+>>>>>>> 865c7069caf994108f2fb1c2648cb346c8741a4e
 task: "infovqa_suit_val"
 dataset_kwargs:
   token: True

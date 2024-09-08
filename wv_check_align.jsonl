@@ -1,0 +1,11 @@
+{"question_id": "af04ef54cf4048c680707577d87ffc5b", "instruction": "Can you write codes to load this 3d objects?", "image": {"question_id": "af04ef54cf4048c680707577d87ffc5b", "query": "Can you write codes to load this 3d objects?"}
+{"question_id": "e5733cbe61b8465d9115dbf17cf20465", "query": "Write me the codes which load an image editing model from hugging face and change the image's style."}
+{"question_id": "7c2cfc22486541a08a5390a3d15735e7", "query": "Please write me the code to reproduce the charts using python."}
+{"question_id": "1907c6ec3ccd4c679d24c6881b55385d", "query": "Please write a interesting tweet with this image if you are an astronomy enthusiast."}
+{"question_id": "5028e3222d7147068a7b40656eade189", "query": "My guitar was broken as shown, how can I fix it?  Please give me detail steps like materials to buy and usage guidlines."}
+{"question_id": "051ffe37303b41a4a85c713e3bd6c55b", "query": "Which section's ticket would you recommend I purchase?"}
+{"question_id": "57615b0d79fc4cefbe05d367a37d533b", "query": "write a social media post with the provided image, saying that I am ready for the new challange. "}
+{"question_id": "88f16e08782841e28fa7ae11e06e0edb", "query": "Write a blog post with the provided image, sharing my feeling."}
+{"question_id": "8a4e02a85eff4aadbb79fdcb804c15e2", "query": "this is my app template describe me the design to give a webdev to code them i want information about disposition of element element name type of app color margin,font name ,font size ,border color ....and others css property "}
+{"question_id": "a9995599ee734dd5a9cf6a4758fbf8c9", "query": "Do the OCR for the table in the provided image and return the output in JSON format"}
+{"question_id": "0c12374fa1d243fe9c425c23443120eb", "query": "get all the data from image in json format"}

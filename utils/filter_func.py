@@ -52,6 +52,6 @@ if __name__=='__main__':
     easy_list,middle_list,hard_list=difficult_filter_func('./static_result/result_ai2d_text_only_VD.json',threshold=1.0)
     print(f'the length of easy list is {len(easy_list)}')
     print(f'the length of middle list is {len(middle_list)}')
-    print(f'the length of hard list is {len(hard_list)}')
+    print(f'the length of har list is {len(hard_list)}')
     # print(easy_list)
     # print(easy_list,middle_list,hard_list)

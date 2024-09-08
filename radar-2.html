@@ -1,0 +1,158 @@
+<!--
+	THIS EXAMPLE WAS DOWNLOADED FROM https://echarts.apache.org/examples/en/editor.html?c=radar&renderer=svg&code=PYBwLglsB2AEC8sDeAoWtJgDYFMBcya6GOAHmAQOQBCAhgM4QDGsASrQCa0BOsAwgAseYSkQC-AGiK4A5jmgcCqYrC5haBANpEVAel2wARFiy0AbrQCMAOgCsAfQDsAI0NSV6fUZPmrd-5YAzK7uHl7GphY2AGz2ZswArtC0Lm46xOE-Udax8UxJVsFpHrCUWX6xgQAszpShKmWRtPY-ALa0gXXp6JRMwDJmWK1dJZQcODgg9BMA1gC0gyMelBDjAGbM9ABMS3oGhgCOAO7yC1hzTEJgxWH7rRDQzCCtC3M2AAw3DfePTM9zbQ6ry2dl2xBW0HoYG4CSYYGcWAgIAWiWScxcYJ6DzAOG40EGCxstkxpVIfVaIGA024ohUAF1xKFuJweEp0l56EIQPhSkwINwmLgwQ8OMxaGBgNwtN1kLBkq0eb1aOAoI9oDI6rB2qQCJZ3u9YJIZUg5bQFVQACq6ABisG4OAYMAeGokWtoOtgeoNRpKJvlioAcpL2lhYAA1ACKAEFNdrdfrDfViH6zYqAJLQNbAWAAVQUuKhtAUztg0dj7vj3qT6BT5tKAGU-fImDhSzHXXHPQmfR5a4qAPJ8Vjlj1ew3pBnoHvUiA4ejSlTKDz-qjUBIcORgWBmeiwejc4vqklgACe3KozK4NOrqnFGlg2hKngMS5KXnQFiwCR5mkcIKq0S2K6gQgrY7zRK6lgAJzWFB0SOK6jjWJY8GulsMEAByWFsaHWFs-p0jez7ECupTlESTi1DKxE9m-L7UbA77brQX4_o4VTWFhgTAdEOT6mhticfxsAYbBtgYcBHyOAhsAgo4BFEYxBjoKRjS-BRQRUU-SmJgxXivrcxCft-WjRCC-HvK6VQ2F6AnWI4YHASCGEOZJ9nRFBkHvLBCl6cppp1mp2S5KiKRaU-Xi0YZBl7EZLEmQ-Zl4VsMlVIEyHCYE3n6pZsDWTkWxAXlRKBBJnocfJ7yEX5JGplQ5E5HEoWabSEUGFFi4MR-8U_tEvGFVZSG5VlnGurY6X4WV43WO80mQUhljVdpKl1WRTQxPY1ThSUHXJl1zGsVo7EzYElhWRxWxVFUwFIYE0TcXl6WBM9VmCbY72QelUFLctqnlC0pjtJ0DG7TW-3GT-z2wVsOGwO9yFjTYVRFbYMHI2Vd12KVkEwYEP3aapfQDEMrU7YpMUeBDpmiY4KFWaJRXVLBwEM-deGnZBNiOPjT6qeMkzTDg8yLCD5Pgz1R1IS5VkgrlAEzUVlis3lSEAbD0E5DzJSqasOAbEw2ykx4oM6RTxHdYdD6q1UuXZcJMNiblKV2BhD0oTklhFUhlVaxk_mqccpwEpc4pG7FJv6TVFsJb-znvNdeUcTlaExPbHHiQ9gSCWrrq8T7ilMapPxPC8ZhvDNYd-7p2lm3FluaFnnHS49CMtx9cMM0VvEQbJgnc4pK2BcXfwvICgTAqCosMbX0dsUh0TYa9rfu65sC8fHsOXe5nmyTNvsqDrkLQrC8KIsieQFOi23G2Ly0HTHUHeVB1SIzkz9jSC8Fe6JUHiTLyFmTQkhb6A8AqKmxLifE5wzBEkrlOW-y0qYPhcnYaIZV5YpSKldPClgZKOAmlBWG4lrClU3hxKo-9aqBTJMACkVJcRwPHCUScxAxBEAZGIAA3EAA
+	⚠ Please be aware that this chart is not an official demo of Apache ECharts but is made by user-generated code.
+-->
+<!DOCTYPE html>
+<html lang="en" style="height: 100%">
+<head>
+  <meta charset="utf-8">
+</head>
+<body style="height: 100%; margin: 0">
+  <div id="container" style="height: 100%"></div>
+
+  
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+  
+  <!-- Uncomment this line if you want to dataTool extension
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.5.1/dist/extension/dataTool.min.js"></script>
+  -->
+  <!-- Uncomment this line if you want to use gl extension
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts-gl@2/dist/echarts-gl.min.js"></script>
+  -->
+  <!-- Uncomment this line if you want to echarts-stat extension
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts-stat@latest/dist/ecStat.min.js"></script>
+  -->
+  <!-- Uncomment this line if you want to echarts-graph-modularity extension
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts-graph-modularity@2/dist/echarts-graph-modularity.min.js"></script>
+  -->
+  <!-- Uncomment this line if you want to use map
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@4.9.0/map/js/world.js"></script>
+  -->
+  <!-- Uncomment these two lines if you want to use bmap extension
+  <script type="text/javascript" src="https://api.map.baidu.com/api?v=3.0&ak=YOUR_API_KEY"></script>
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.5.1/dist/extension/bmap.min.js"></script>
+  -->
+
+  <script type="text/javascript">
+    var dom = document.getElementById('container');
+    var myChart = echarts.init(dom, null, {
+      renderer: 'svg',
+      useDirtyRect: false
+    });
+    var app = {};
+    
+    var option;
+
+    option = {
+  title: {
+    text: 'Basic Radar Chart'
+  },
+  legend: {
+    data: [
+      // "llava1.5_7b",
+      // "llava1.5_13b",
+      // "llava1.6_vicuna7b",
+      // "llava1.6_vicuna13b",
+      'llava1.6_34b',
+      'llava_llama3',
+      'cogvlm',
+      'deepseek-vl',
+      'idefics2',
+      // "qwen-vl-chat",
+      // "minicpm-v-1.0",
+      'minicpm-llama3-v-2.5',
+      'instructblip-vicuna-7b',
+      'internvl-v1.5',
+      'xcomposer'
+    ]
+  },
+  radar: {
+    // shape: 'circle',
+    indicator: [
+      { name: 'captioning', max: 100 },
+      { name: 'T/F reasoning', max: 100 },
+      { name: 'Normal VQA', max: 100 },
+      { name: 'Info Understanding QA', max: 100 },
+      { name: 'Science QA', max: 100 },
+      { name: 'OCR', max: 100 }
+    ]
+  },
+  series: [
+    {
+      name: 'Budget vs spending',
+      type: 'radar',
+      data: [
+        // {
+        //   value: [72.465, 32.506, 19.967, 7.167, 29.812, 2.200],
+        //   name: 'llava1.5_7b'
+        // },
+        // {
+        //   value: [74.813, 36.600, 25.800, 8.958, 31.077, 2.700],
+        //   name: 'llava1.5_13b'
+        // },
+        // {
+        //   value: [62.200, 41.100, 25.750, 32.875, 31.769, 10.900],
+        //   name: 'llava1.6_vicuna7b'
+        // },
+        // {
+        //   value: [62.227, 43.100, 30.000, 41.625, 41.538, 14.700],
+        //   name: 'llava1.6_vicuna13b'
+        // },
+        {
+          value: [66.25, 47.0, 30.8, 53.208, 53.077, 17.1],
+          name: 'llava1.6_34b'
+        },
+        {
+          value: [74.031, 44.244, 37.363, 43.333, 45.555, 13.9],
+          name: 'llava_llama3'
+        },
+        {
+          value: [33.922, 55.1, 51.45, 59.458, 36.538, 19.3],
+          name: 'cogvlm'
+        },
+        {
+          value: [68.716, 48.5, 34.9, 38.5, 44.231, 11.7],
+          name: 'deepseek-vl'
+        },
+        {
+          value: [77.87, 42.0, 46.05, 18.5, 47.462, 19.6],
+          name: 'idefics2'
+        },
+        // {
+        //   value: [7.440, 0.000, 22.950, 27.583, 16.615, 7.700],
+        //   name: 'qwen-vl-chat'
+        // },
+        // {
+        //   value: [72.804, 44.000, 21.600, 24.583, 35.462, 6.700],
+        //   name: 'minicpm-v-1.0'
+        // },
+        {
+          value: [35.887, 43.1, 43.55, 58.55, 6.6, 25.7],
+          name: 'minicpm-llama3-v-2.5'
+        },
+        {
+          value: [77.612, 45.1, 16.75, 6.042, 24.769, 2.0],
+          name: 'instructblip-vicuna-7b'
+        },
+        {
+          value: [90.934, 51.693, 52.675, 78.958, 42.162, 27.9],
+          name: 'internvl-v1.5'
+        },
+        {
+          value: [87.568, 46.275, 44.217, 73.292, 58.382, 24.4],
+          name: 'xcomposer'
+        }
+      ]
+    }
+  ]
+};
+
+
+    if (option && typeof option === 'object') {
+      myChart.setOption(option);
+    }
+
+    window.addEventListener('resize', myChart.resize);
+  </script>
+</body>
+</html>

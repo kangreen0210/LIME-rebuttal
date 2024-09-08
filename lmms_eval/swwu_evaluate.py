@@ -286,9 +286,15 @@ def load_model(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="config for MMRA benchmark")
 
+<<<<<<< HEAD
     parser.add_argument("--dataset_name" , type = str , default = './hf_dataset/MMRA/')
     parser.add_argument("--model_name" , type = str , default = 'Idefics2')
     parser.add_argument("--model_id" , type = str , default = '/xpfs/public/gezhang/zk/models/idefics2-8b')
+=======
+    parser.add_argument("--dataset_name" , type = str , default = '/ML-A100/team/mm/zk/lmms-eval/hf_dataset/MMRA/')
+    parser.add_argument("--model_name" , type = str , default = 'Idefics2')
+    parser.add_argument("--model_id" , type = str , default = '/ML-A100/team/mm/zk/models/idefics2-8b')
+>>>>>>> 865c7069caf994108f2fb1c2648cb346c8741a4e
     parser.add_argument("--multiprocess" , type = int , default = 0)
     args = parser.parse_args()
 

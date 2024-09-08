@@ -180,9 +180,13 @@ class MiniCPM_V(lmms):
                 elif not isinstance(until, list):
                     raise ValueError(f"Expected `gen_kwargs['until']` to be of type Union[str,list] but got {type(until)}")
             assert self.batch_size_per_gpu == 1, "Do not support batch_size_per_gpu > 1 for now"
+<<<<<<< HEAD
             # assert len(visuals) == 1, "MiniCPM_V interface does not support bn_image > 1 for now"
             if len(visuals)>1:
                 visuals=visuals[:1]#debug use first image
+=======
+            assert len(visuals) == 1, "MiniCPM_V interface does not support bn_image > 1 for now"
+>>>>>>> 865c7069caf994108f2fb1c2648cb346c8741a4e
             context = contexts[0]
             if "<image>" in context:
                 # minicpm does not expect the <image> tag

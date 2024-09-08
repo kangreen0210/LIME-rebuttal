@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 dataset_path: ./vlms-bench-data-selected-VD/ai2d
+=======
+dataset_path: /ML-A100/team/mm/zk/lmms-eval/vlms-bench-data-selected-VD/ai2d
+>>>>>>> 865c7069caf994108f2fb1c2648cb346c8741a4e
 task: "ai2d_suit_vd"
 dataset_kwargs:
   token: True

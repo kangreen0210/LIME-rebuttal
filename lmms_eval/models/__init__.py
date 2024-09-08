@@ -46,17 +46,24 @@ AVAILABLE_MODELS = {
     "qwen":"Qwen",
     'llama':"Llama",
     "gemma":"Gemma",
+<<<<<<< HEAD
     "cambrian":"Cambrian",
+=======
+    "cambrian_8b":"Cambrian_8b",
+>>>>>>> 865c7069caf994108f2fb1c2648cb346c8741a4e
     "internvl2": "InternVL2",
     "mantis": "Mantis",
     "emu2": "Emu2",
     "paligemma":"Paligemma",
+<<<<<<< HEAD
     "internvl2_large":"InternVL2_large",
     "MIO_sft":"MIO",
     "onevision":"onevision",
     "onevision_large":"onevision_large",
     "cogvlm2":"cogvlm2",
     "MIO_batch":"MIO_batch"
+=======
+>>>>>>> 865c7069caf994108f2fb1c2648cb346c8741a4e
 }
 
 for model_name, model_class in AVAILABLE_MODELS.items():
