@@ -42,7 +42,7 @@ class TinyLlava(lmms):
 
     def __init__(
         self,
-        pretrained: str = "/ML-A100/team/mm/zk/models/tiny-llava-v1-hf",
+        pretrained: str = "/xpfs/public/gezhang/zk/models/tiny-llava-v1-hf",
         device: Optional[str] = "cuda:0",
         batch_size: Optional[Union[int, str]] = 1,
         device_map="cuda:0",
@@ -219,6 +219,7 @@ class TinyLlava(lmms):
             context = contexts[0]
             prompt = f"USER: <image>\n{context}\nASSISTANT:"
             model_inputs = self.processor(text=prompt, images=visuals[0])
+            print(visuals[0])
             for k, v in model_inputs.items():
                 model_inputs[k] = v.to(self.device, non_blocking=True) if isinstance(v, torch.Tensor) else [vv.to(self.device, non_blocking=True) for vv in v]
             '''
@@ -239,8 +240,10 @@ class TinyLlava(lmms):
             #     **model_inputs, temperature=gen_kwargs["temperature"], max_new_tokens=gen_kwargs["max_new_tokens"], top_p=gen_kwargs["top_p"], num_beams=gen_kwargs["num_beams"], pad_token_id=self.tokenizer.eos_token_id
             # )
             generation_output = self.model.generate(**model_inputs, max_new_tokens=gen_kwargs["max_new_tokens"], pad_token_id=self.tokenizer.eos_token_id)
-            generation_texts = self.processor.decode(generation_output [0][2:], skip_special_tokens=True)
-            response = [generation_texts]
+            text_outputs = self.tokenizer.batch_decode(generation_output, skip_special_tokens=True)[0]
+            text_outputs = text_outputs.split("ASSISTANT:")[-1].strip()
+            response = [text_outputs]
+            # response=text_outputs
             res.extend(response)
             pbar.update(1)
 

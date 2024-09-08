@@ -20,6 +20,9 @@ from accelerate import Accelerator, DistributedType, InitProcessGroupKwargs
 
 from packaging import version
 import warnings
+from transformers import (
+    StoppingCriteria,
+    StoppingCriteriaList)
 
 warnings.filterwarnings("ignore")
 
@@ -126,9 +129,31 @@ class Llama(lmms):
         return res
 
     def generate_until(self, requests: List[Instance]) -> List[str]:
+        # class StoppingCriteriaSub(StoppingCriteria):
+        #     def __init__(self, stops = [],tokenizer=None, encounters=1):
+        #         super().__init__()
+        #         self.stops = [stop.to("cuda") for stop in stops]
+        #         self.tokenizer=tokenizer
+
+        #     def __call__(self, input_ids: torch.LongTensor, scores: torch.FloatTensor):
+        #         last_token = input_ids[0][-1]
+        #         for stop in self.stops:
+        #             if self.tokenizer.decode(stop) == self.tokenizer.decode(last_token):
+        #                 return True
+        #         return False
+
+
+        # stop_words = ["<|endoftext|>", "<|im_start|>", "<|im_end|>", "<|im_sep|>"]
+        # stop_words_ids = [self.tokenizer(stop_word, return_tensors='pt', add_special_tokens=False)['input_ids'].squeeze() for stop_word in stop_words]
+        # stopping_criteria = StoppingCriteriaList([StoppingCriteriaSub(stops=stop_words_ids,tokenizer=self.tokenizer)])
+        stop_token_ids=[self.tokenizer.eos_token_id]
+        # if model_name =='Meta-Llama-3-8B-Instruct':
+        stop_token_ids.append(self.tokenizer.convert_tokens_to_ids("<|eot_id|>"))
+        print(stop_token_ids)
+        sampling_params = SamplingParams(max_tokens=128,stop_token_ids=stop_token_ids)
         res = []
         request_batch_size = 64
-        sampling_params = SamplingParams(max_tokens = 128, temperature = 0.0)
+        # sampling_params = SamplingParams(max_tokens = 128, temperature = 0.0)
         raw_instruction_data = copy.deepcopy(requests)
         for i in tqdm(range(0, len(raw_instruction_data), request_batch_size), desc="Processing raw_instruction_data"):
             if i+request_batch_size>=len(raw_instruction_data):

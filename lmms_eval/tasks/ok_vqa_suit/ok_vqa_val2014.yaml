@@ -1,4 +1,4 @@
-dataset_path: /ML-A100/team/mm/zk/lmms-eval/vlms-bench-data-jsonl/OK-VQA/
+dataset_path: ./vlms-bench-data-jsonl/OK-VQA/
 group: ok_vqa_suit
 task: ok_vqa_suit_val2014
 test_split: train

@@ -1,0 +1,3 @@
+group: textvqa_suit_vd
+task:
+- textvqa_suit_val_vd

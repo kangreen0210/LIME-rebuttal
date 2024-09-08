@@ -9,10 +9,13 @@ logger.add(sys.stdout, level="WARNING")
 AVAILABLE_MODELS = {
     "llava": "Llava",
     "qwen_vl": "Qwen_VL",
+    "qwen_vl_chat": "qwen_vl_chat",
+    "qwen2_vl_chat": "Qwen2_VL_chat",
     "fuyu": "Fuyu",
     "batch_gpt4": "BatchGPT4",
     "gpt4v": "GPT4V",
     "instructblip": "InstructBLIP",
+    "minicpm_v25":"MiniCPM_V25",
     "minicpm_v": "MiniCPM_V",
     "llava_vid": "LlavaVid",
     "videoChatGPT": "VideoChatGPT",
@@ -33,12 +36,27 @@ AVAILABLE_MODELS = {
     "cogvlm_chat":"CogVLM_Chat",
     "deepseek_vl_chat":"Deepseek_VL_Chat",
     "tiny_llava": "TinyLlava",
+    "tiny_llava_phi": "TinyLlava_phi",
     "llava_hf": "LlavaHf",
     "longva": "LongVA",
     "bunny_3b":"Bunny_3B",
     "vicuna_7b":"Vicuna_7b",
     "vicuna_33b":"Vicuna_33b",
-    "yi":"Yi"
+    "yi":"Yi",
+    "qwen":"Qwen",
+    'llama':"Llama",
+    "gemma":"Gemma",
+    "cambrian":"Cambrian",
+    "internvl2": "InternVL2",
+    "mantis": "Mantis",
+    "emu2": "Emu2",
+    "paligemma":"Paligemma",
+    "internvl2_large":"InternVL2_large",
+    "MIO_sft":"MIO",
+    "onevision":"onevision",
+    "onevision_large":"onevision_large",
+    "cogvlm2":"cogvlm2",
+    "MIO_batch":"MIO_batch"
 }
 
 for model_name, model_class in AVAILABLE_MODELS.items():

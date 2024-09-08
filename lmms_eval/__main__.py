@@ -19,7 +19,9 @@ from accelerate.utils import InitProcessGroupKwargs
 from pathlib import Path
 from typing import Union
 import hashlib
-
+sys.path.append(sys.path[0] + '/..')
+sys.path.append('./')
+os.chdir('./')
 from lmms_eval import evaluator, utils
 from lmms_eval.tasks import initialize_tasks, include_path, get_task_dict
 from lmms_eval.api.registry import ALL_TASKS
@@ -288,9 +290,9 @@ def cli_evaluate_single(args: Union[argparse.Namespace, None] = None) -> None:
     # set datetime before evaluation
     datetime_str = utils.get_datetime_str(timezone=args.timezone)
     if args.output_path:
-        if args.log_samples_suffix and len(args.log_samples_suffix) > 15:
-            eval_logger.warning("The suffix for log_samples is too long. It is recommended to keep it under 15 characters.")
-            args.log_samples_suffix = args.log_samples_suffix[:5] + "..." + args.log_samples_suffix[-5:]
+        # if args.log_samples_suffix and len(args.log_samples_suffix) > 15:
+        #     eval_logger.warning("The suffix for log_samples is too long. It is recommended to keep it under 15 characters.")
+        #     args.log_samples_suffix = args.log_samples_suffix[:5] + "..." + args.log_samples_suffix[-5:]
 
         hash_input = f"{args.model_args}".encode("utf-8")
         hash_output = hashlib.sha256(hash_input).hexdigest()[:6]

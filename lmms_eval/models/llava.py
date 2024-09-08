@@ -94,6 +94,7 @@ class Llava(lmms):
         except TypeError:
             # for older versions of LLaVA that don't have multimodal argument
             llava_model_args.pop("multimodal", None)
+            llava_model_args.pop("attn_implementation", None)
             self._tokenizer, self._model, self._image_processor, self._max_length = load_pretrained_model(pretrained, None, model_name, device_map=self.device_map, **llava_model_args)
         self._config = self._model.config
         self.model.eval()

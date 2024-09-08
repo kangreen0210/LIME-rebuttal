@@ -8,3 +8,8 @@ metric_list:
     ignore_case: true
     ignore_punctuation: true
 process_results: !function utils.vqav2_process_results_val
+
+generation_kwargs:
+  max_new_tokens: 4
+  temperature: 0
+  do_sample: False

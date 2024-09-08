@@ -1,9 +1,10 @@
 # Add the following functions to your existing utils.py file
-
+from PIL import Image
 
 def pope_doc_to_visual(doc):
     # Assuming the 'doc' dictionary has a key 'image' with image data
-    return [doc["image"].convert("RGB")]
+    image=Image.open(doc["image"])
+    return [image.convert("RGB")]
 
 
 def pope_doc_to_text(doc):

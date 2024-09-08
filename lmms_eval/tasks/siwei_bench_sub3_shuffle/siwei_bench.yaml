@@ -1,0 +1,5 @@
+group: siwei_bench_sub3_shuffle
+task:
+- siwei_bench_shapesimilarto_shuffle
+- siwei_bench_subevent_shuffle
+

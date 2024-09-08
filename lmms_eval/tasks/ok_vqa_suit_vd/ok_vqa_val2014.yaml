@@ -1,0 +1,5 @@
+dataset_path: ./vlms-bench-data-selected-VD/OK-VQA/
+group: ok_vqa_suit_vd
+task: ok_vqa_suit_val2014_vd
+test_split: train
+include: _default_template_vqa_yaml

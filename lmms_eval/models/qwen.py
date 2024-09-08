@@ -60,7 +60,7 @@ class Qwen(lmms):
         #     torch_dtype="auto",
         #     device_map=self.device_map
         # )
-        self._model = LLM(model_name, tensor_parallel_size=8, trust_remote_code=True)
+        self._model = LLM(model_name, tensor_parallel_size=4, trust_remote_code=True)
         # device_map=self.device_map
         self._tokenizer = AutoTokenizer.from_pretrained(pretrained)
         # self._model.eval()

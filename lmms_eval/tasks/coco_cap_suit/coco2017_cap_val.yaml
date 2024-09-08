@@ -1,4 +1,4 @@
-dataset_path: /ML-A100/team/mm/zk/lmms-eval/vlms-bench-data-jsonl/COCO-Caption2017/
+dataset_path: ./vlms-bench-data-jsonl/COCO-Caption2017/
 dataset_kwargs:
   token: True
 task: "coco2017_cap_suit_val"

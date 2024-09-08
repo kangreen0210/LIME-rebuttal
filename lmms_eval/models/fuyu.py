@@ -175,7 +175,6 @@ class Fuyu(lmms):
 
             # if isinstance(visuals[0], list):
             #     visuals = [visuals[idx][0] for idx in range(len(visuals))]  # get the first image in multi-image scenarios.
-
             # assert len(contexts) == self.batch_size_per_gpu, f"Expected contexts batch size {self.batch_size_per_gpu}, got {len(contexts)}"
             # assert len(visuals) == self.batch_size_per_gpu, f"Expected visuals batch size {self.batch_size_per_gpu}, got {len(visuals)}"
             formatted_contexts = [f"{context}\n" for context in contexts]

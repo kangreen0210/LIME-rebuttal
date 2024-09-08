@@ -1,4 +1,4 @@
-dataset_path: /ML-A100/team/mm/zk/lmms-eval/vlms-bench-data-jsonl/TextCaps/
+dataset_path: ./vlms-bench-data-jsonl/TextCaps/
 dataset_kwargs:
   token: True
 task: "textcaps_suit_val"

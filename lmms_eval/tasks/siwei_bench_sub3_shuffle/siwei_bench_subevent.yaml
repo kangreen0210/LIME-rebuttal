@@ -1,0 +1,20 @@
+dataset_path: /xpfs/public/gezhang/zk/MMIR_codebase/Mantis/final_bench_hf_img_2_1/SubEvent
+task: "siwei_bench_subevent_shuffle"
+test_split: train
+output_type: generate_until
+doc_to_visual: !function utils.siwei_bench_doc_to_visual
+doc_to_text: !function utils.siwei_bench_doc_to_text
+doc_to_target: "answer"
+generation_kwargs:
+  max_new_tokens: 128
+  temperature: 0
+  top_p: 1.0
+  num_beams: 1
+  do_sample: false
+process_results: !function utils.siwei_bench_process_results
+metric_list:
+  - metric: exact_match
+    aggregation: mean
+    higher_is_better: true
+    ignore_case: true
+    ignore_punctuation: true

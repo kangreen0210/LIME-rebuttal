@@ -27,14 +27,14 @@ from lmms_eval.utils import (
     get_git_commit_hash,
     simple_parse_args_string,
 )
-os.environ['HF_HOME'] = '/ML-A100/team/mm/zk/cache/datasets'
+os.environ['HF_HOME'] = '/xpfs/public/gezhang/zk/cache/datasets'
 os.environ['http_proxy'] ='http://100.66.28.72:3128'
 os.environ['https_proxy'] ='http://100.66.28.72:3128'
 
 parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
 parser.add_argument(
         "--output_path",
-        default='/ML-A100/team/mm/zk/lmms-eval/logs',
+        default='./logs',
         type=str,
         metavar="= [dir/file.jsonl] [DIR]",
         help="The path to the output file where the result metrics will be saved. If the path is a directory and log_samples is true, the results will be saved in the directory. Else the parent directory will be used.",
@@ -73,7 +73,7 @@ def evaluate(
     initialize_tasks()
     args.output_path=output_path
 
-    # json_file='/ML-A100/team/mm/zk/lmms-eval/logs/llava1.5_13b_test_llava/cmmmu_val.json'
+    # json_file='./logs/llava1.5_13b_test_llava/cmmmu_val.json'
     with open(json_file) as json_file:
         responses=json.load(json_file)['logs']
 
@@ -373,7 +373,7 @@ def evaluate(
 
 
 if __name__=='__main__':
-    root_dir='/ML-A100/team/mm/zk/lmms-eval/logs_new/new_pope'
+    root_dir='./logs_new/new_pope'
     tasks=['pope']
     # filter_difficulty=['delete','easy'] #delete easy middle difficult very difficult  总共有多少条
     filter_difficulty=['duplicated','delete','easy','middle']

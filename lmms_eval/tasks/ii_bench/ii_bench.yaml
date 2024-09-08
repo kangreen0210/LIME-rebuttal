@@ -1,4 +1,4 @@
-dataset_path: lmms-lab/II-Bench
+dataset_path: m-a-p/II-Bench
 task: "ii-bench"
 test_split: test
 output_type: generate_until

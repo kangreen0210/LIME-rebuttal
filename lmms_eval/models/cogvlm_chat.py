@@ -6,7 +6,7 @@ from lmms_eval.api.instance import Instance
 from lmms_eval.api.model import lmms
 from lmms_eval.api.registry import register_model
 # from lmms_eval.models.model_utils.qwen.qwen_generate_utils import make_context
-
+from lmms_eval.tasks.mmmu.utils_group_img import process_images
 from accelerate import Accelerator, DistributedType
 from typing import List, Optional, Union, Tuple
 import uuid
@@ -322,7 +322,7 @@ class CogVLM_Chat(lmms):
             cont = cont[:, inputs['input_ids'].shape[1]:]
             text_outputs = self.tokenizer.decode(cont[0],skip_special_tokens=True).strip()
             res.append(text_outputs)
-            print(text_outputs)
+            # print(text_outputs)
             self.cache_hook.add_partial("generate_until", (context, gen_kwargs), text_outputs)
             pbar.update(1)
             

@@ -1,0 +1,9 @@
+dataset_path: ./vlms-bench-data-selected-VD/infovqa/
+task: "infovqa_suit_val_vd"
+test_split: train
+output_type: generate_until
+metric_list:
+  - metric: anls
+    aggregation: mean
+    higher_is_better: true
+include: _default_template_infovqa_yaml
