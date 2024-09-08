@@ -67,6 +67,13 @@ vlms-bench-data-selected-VD/
 vlms-bench-data-selected-VD-bak/
 vlms-bench-data-VD/
 vlms-bench-data-jsonl/
+logs_text_only_all/
+logs_text_only_all_VD/
+logs_text_only_bak/
+logs_text_only_suit/
+logs_text_only_suit_all/
+logs_text_only_suit_new/
+logs_text_only_VD/
 logs_new/
 logs_text_only/
 hf_dataset/
@@ -76,7 +83,9 @@ gemini_flash/
 *.log
 *.jpg
 *.txt
+*.pt
 data_tmp/
+logs_all/
 db_save_img/
 lmms_eval/tmp/
 excel_result/
@@ -87,7 +96,6 @@ textonly_double_check/
 textonly_ai2d/
 text_only_VD/
 exact_problem_case/
-db_save_img/
 mlx_clip/
 datasets_wild_new/
 db_save_text_clip/
