@@ -15,10 +15,7 @@ from lmms_eval.api.instance import Instance
 from tqdm import tqdm
 from accelerate import Accelerator, DistributedType
 from accelerate.state import AcceleratorState
-<<<<<<< HEAD
 from accelerate import init_empty_weights, infer_auto_device_map, load_checkpoint_and_dispatch
-=======
->>>>>>> 865c7069caf994108f2fb1c2648cb346c8741a4e
 
 from loguru import logger as eval_logger
 
@@ -33,10 +30,7 @@ class Emu2(lmms):
         self,
         pretrained: str = "BAAI/Emu2",
         device: Optional[str] = "cuda",
-<<<<<<< HEAD
         device_map='auto',
-=======
->>>>>>> 865c7069caf994108f2fb1c2648cb346c8741a4e
         max_new_tokens: int = 256,
         batch_size: Optional[Union[int, str]] = 1,
         **kwargs,
@@ -51,7 +45,6 @@ class Emu2(lmms):
         else:
             self._device = device
 
-<<<<<<< HEAD
         self._model = AutoModelForCausalLM.from_pretrained(pretrained, torch_dtype=torch.bfloat16, device_map=self._device, trust_remote_code=True)
         # with init_empty_weights():
         #     model = AutoModelForCausalLM.from_pretrained(
@@ -68,9 +61,6 @@ class Emu2(lmms):
         #     model, 
         #     'local/path/to/hf/version/Emu2-Chat/model',
         #     device_map=device_map).eval()
-=======
-        self._model = AutoModelForCausalLM.from_pretrained(pretrained, torch_dtype=torch.bfloat16, device_map=self.device, trust_remote_code=True)
->>>>>>> 865c7069caf994108f2fb1c2648cb346c8741a4e
         # self._model = None
         self.model.eval()
         self.model.tie_weights()
@@ -204,15 +194,12 @@ class Emu2(lmms):
             gen_kwargs = all_gen_kwargs[0]
             if "max_new_tokens" not in gen_kwargs:
                 gen_kwargs["max_new_tokens"] = 1024
-<<<<<<< HEAD
             if "until" in gen_kwargs:
                 until = gen_kwargs.pop("until")
                 if isinstance(until, str):
                     until = [until]
                 elif not isinstance(until, list):
                     raise ValueError(f"Expected `gen_kwargs['until']` to be of type Union[str,list] but got {type(until)}")
-=======
->>>>>>> 865c7069caf994108f2fb1c2648cb346c8741a4e
             contexts, all_gen_kwargs, doc_to_visuals, doc_id, tasks, splits = zip(*chunk)
             visuals = [doc_to_visual(self.task_dict[task][split][ids]) for ids, task, split, doc_to_visual in zip(doc_id, tasks, splits, doc_to_visuals)]
             # print(visuals[0])
@@ -221,11 +208,6 @@ class Emu2(lmms):
             #     visuals = [visuals[idx][0] for idx in range(len(visuals))]  # get the first image in multi-image scenarios.
             # assert len(contexts) == self.batch_size_per_gpu, f"Expected contexts batch size {self.batch_size_per_gpu}, got {len(contexts)}"
             # assert len(visuals) == self.batch_size_per_gpu, f"Expected visuals batch size {self.batch_size_per_gpu}, got {len(visuals)}"
-<<<<<<< HEAD
-=======
-            print('')
-            print(contexts)
->>>>>>> 865c7069caf994108f2fb1c2648cb346c8741a4e
             formatted_contexts = [f"[<IMG_PLH>]{context}" for context in contexts]
             formatted_contexts[0] = formatted_contexts[0].replace('.', ':')
             # print(formatted_contexts)
@@ -233,12 +215,8 @@ class Emu2(lmms):
             inputs = self.model.build_input_ids(
                     text=formatted_contexts,
                     tokenizer=self.tokenizer,
-<<<<<<< HEAD
                     image=visuals,
                     # device=self.model.device,
-=======
-                    image=visuals
->>>>>>> 865c7069caf994108f2fb1c2648cb346c8741a4e
                 )
             # inputs = self.model.build_input_ids(
             #     text=formatted_contexts,
@@ -249,21 +227,12 @@ class Emu2(lmms):
             # )
 
             outputs = self.model.generate(
-<<<<<<< HEAD
                     input_ids=inputs["input_ids"].to(self.device),
                     attention_mask=inputs["attention_mask"].to(self.device),
                     image=inputs["image"].to(self.device,torch.bfloat16),
                     # max_new_tokens=gen_kwargs["max_new_tokens"],
                     # length_penalty=-1
                     **gen_kwargs
-=======
-                    input_ids=inputs["input_ids"],
-                    attention_mask=inputs["attention_mask"],
-                    image=inputs["image"].to(torch.bfloat16),
-                    max_new_tokens=gen_kwargs["max_new_tokens"],
-                    length_penalty=-1
-                    # **gen_kwargs
->>>>>>> 865c7069caf994108f2fb1c2648cb346c8741a4e
                 )
             
             output_text = self._tokenizer.batch_decode(outputs, skip_special_tokens=True)

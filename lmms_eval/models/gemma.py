@@ -30,7 +30,7 @@ class Gemma(lmms):
     """
     def __init__(
         self,
-        pretrained: str = "/ML-A100/team/mm/zhangge/models/gemma-1.1-7b-it", 
+        pretrained: str = "None", 
         device: Optional[str] = "cuda",
         batch_size: Optional[Union[int, str]] = 1,
         device_map="auto",

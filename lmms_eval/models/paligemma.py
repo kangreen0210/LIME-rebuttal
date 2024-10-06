@@ -4,11 +4,7 @@ warnings.simplefilter("ignore", category=DeprecationWarning)
 warnings.filterwarnings("ignore")
 
 from accelerate import Accelerator, DistributedType
-<<<<<<< HEAD
 from transformers import AutoProcessor, PaliGemmaForConditionalGeneration,AutoTokenizer
-=======
-from transformers import AutoProcessor, PaliGemmaForConditionalGeneration
->>>>>>> 865c7069caf994108f2fb1c2648cb346c8741a4e
 from lmms_eval.api.model import lmms
 from lmms_eval.api.registry import register_model
 import torch
@@ -47,7 +43,6 @@ class Paligemma(lmms):
         else:
             self._device = device
 
-<<<<<<< HEAD
         # self._model = FuyuForCausalLM.from_pretrained(pretrained, torch_dtype=torch.bfloat16, device_map=self.device)
         self._model = PaliGemmaForConditionalGeneration.from_pretrained(pretrained, torch_dtype=torch.bfloat16, device_map=self.device)
         self.model.eval()
@@ -57,15 +52,6 @@ class Paligemma(lmms):
 
         # self.image_processor = FuyuImageProcessor()
         self.processor = AutoProcessor.from_pretrained(pretrained)
-=======
-        self._model = PaliGemmaForConditionalGeneration.from_pretrained(pretrained, torch_dtype=torch.bfloat16, device_map=self.device, revision="bfloat16", trust_remote_code=True).eval()
-        # self._model = None
-        self.model.eval()
-        self.model.tie_weights()
-        self._tokenizer = AutoProcessor.from_pretrained(pretrained)
-        self._config = self.model.config
-
->>>>>>> 865c7069caf994108f2fb1c2648cb346c8741a4e
         self.max_new_tokens = max_new_tokens
         self.batch_size_per_gpu = int(batch_size)
         accelerator = Accelerator()
@@ -166,15 +152,12 @@ class Paligemma(lmms):
         res = []
 
         def _collate(x):
-<<<<<<< HEAD
             # the negative sign on len(toks) sorts descending - this has a few advantages:
             # - time estimates will always be over not underestimates, which is more useful for planning
             # - to know the size of a batch when going through the list, you know the first one is always the batch
             #   padded context length. this is useful to simplify the batching logic and more importantly to make
             #   automatic adaptive batches much much easier to implement
             # - any OOMs will happen right away rather than near the end
-=======
->>>>>>> 865c7069caf994108f2fb1c2648cb346c8741a4e
             toks = self.tok_encode(x[0])
             return -len(toks), x[0]
 
@@ -184,7 +167,6 @@ class Paligemma(lmms):
         pbar = tqdm(total=num_iters, disable=(self.rank != 0), desc="Model Responding")
 
         for chunk in chunks:
-<<<<<<< HEAD
             contexts, all_gen_kwargs, doc_to_visual, doc_id, task, split = zip(*chunk)
             task = task[0]
             split = split[0]
@@ -245,50 +227,6 @@ class Paligemma(lmms):
             # app = [gen_text.split("\x04")[1].strip(" ").strip("\n") for gen_text in generation_texts]
             # print("输入：",formatted_contexts)
             # res.extend(response)
-=======
-            # contexts, all_gen_kwargs, doc_to_visual, doc_id, tasks, split = zip(*chunk)
-            contexts, all_gen_kwargs, doc_to_visuals, doc_id, tasks, splits = zip(*chunk)
-            gen_kwargs = all_gen_kwargs[0]
-            if "max_new_tokens" not in gen_kwargs:
-                gen_kwargs["max_new_tokens"] = 1024
-            contexts, all_gen_kwargs, doc_to_visuals, doc_id, tasks, splits = zip(*chunk)
-            visuals = [doc_to_visual(self.task_dict[task][split][ids]) for ids, task, split, doc_to_visual in zip(doc_id, tasks, splits, doc_to_visuals)]
-            # print(visuals[0])
-            visuals = [v[0] for v in visuals]
-            
-            formatted_contexts = [context for context in contexts]
-            formatted_contexts[0] = formatted_contexts[0].replace('.', ':')
-
-            # inputs = self.model.build_input_ids(
-            #         text=formatted_contexts,
-            #         tokenizer=self.tokenizer,
-            #         image=visuals
-            #     )
-            
-            model_inputs = self.tokenizer(text=formatted_contexts, images=visuals, return_tensors="pt").to("cuda")
-            input_len = model_inputs["input_ids"].shape[-1]
-            # print('question is: ')
-            print(formatted_contexts)
-            generation = self.model.generate(**model_inputs, max_new_tokens = gen_kwargs['max_new_tokens'], do_sample=False)
-            generation = generation[0][input_len:]
-            decoded = self.tokenizer.decode(generation, skip_special_tokens=True)
-            # print(decoded)
-
-            # outputs = self.tokenizer.generate(
-            #         input_ids=inputs["input_ids"],
-            #         attention_mask=inputs["attention_mask"],
-            #         image=inputs["image"].to(torch.bfloat16),
-            #         max_new_tokens=gen_kwargs["max_new_tokens"],
-            #         length_penalty=-1
-            #         # **gen_kwargs
-            #     )
-        
-            
-            # output_text = self._tokenizer.batch_decode(outputs, skip_special_tokens=True)
-            # output_text = [t.strip(" ").strip("\n") for t in output_text]
-            # print(decoded)
-            res.extend([decoded])
->>>>>>> 865c7069caf994108f2fb1c2648cb346c8741a4e
             pbar.update(1)
 
         pbar.close()
@@ -337,11 +275,7 @@ class Paligemma(lmms):
     def tok_encode(self, string: str, left_truncate_len=None, add_special_tokens=None) -> List[int]:
         """ """
         add_special_tokens = False if add_special_tokens is None else add_special_tokens
-<<<<<<< HEAD
         encoding = self.tokenizer.encode(string, add_special_tokens=add_special_tokens)
-=======
-        encoding = self.tokenizer.tokenizer.encode(string, add_special_tokens=add_special_tokens)
->>>>>>> 865c7069caf994108f2fb1c2648cb346c8741a4e
         # left-truncate the encoded context to be at most `left_truncate_len` tokens long
         if left_truncate_len:
             encoding = encoding[-left_truncate_len:]

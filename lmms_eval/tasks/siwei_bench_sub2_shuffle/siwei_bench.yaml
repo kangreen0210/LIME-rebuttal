@@ -1,7 +1,0 @@
-group: siwei_bench_sub2_shuffle
-task:
-- siwei_bench_atlocation_shuffle
-- siwei_bench_madeof_shuffle
-- siwei_bench_nearby_shuffle
-- siwei_bench_partof_shuffle
-

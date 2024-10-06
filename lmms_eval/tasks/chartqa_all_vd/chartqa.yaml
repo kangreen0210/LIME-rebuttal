@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 dataset_path: ./vlms-bench-data-VD/ChartQA/
-=======
-dataset_path: /ML-A100/team/mm/zk/lmms-eval/vlms-bench-data-VD/ChartQA/
->>>>>>> 865c7069caf994108f2fb1c2648cb346c8741a4e
 dataset_kwargs:
   token: True
 task: "chartqa_vd"

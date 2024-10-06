@@ -31,7 +31,7 @@ class Qwen(lmms):
 
     def __init__(
         self,
-        pretrained: str = "/ML-A100/team/mm/zhangge/models/Qwen2-72B-Instruct",
+        pretrained: str = None,
         device: Optional[str] = "cuda",
         batch_size: Optional[Union[int, str]] = 1,
         device_map="auto",

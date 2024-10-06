@@ -8,16 +8,6 @@ from lmms_eval.api.model import lmms
 from PIL import Image
 from datetime import timedelta
 from lmms_eval.api.registry import register_model
-# from lmms_eval.models.model_utils.qwen.qwen_generate_utils import make_context
-# 获取当前文件的目录
-# current_dir = os.path.dirname(os.path.abspath(__file__))
-# # 获取同级目录的路径
-# parent_dir = os.path.dirname(current_dir)
-
-# # 将同级目录添加到模块搜索路径
-# sys.path.append(parent_dir)
-# sys.path.append(current_dir)
-# os.chdir('./lmms_eval/models/cambrian')
 from cambrian.model.builder import load_pretrained_model
 from cambrian.conversation import conv_templates, SeparatorStyle
 from cambrian.mm_utils import tokenizer_image_token, process_images, get_model_name_from_path
@@ -131,7 +121,7 @@ def make_context(
 
 
 
-@register_model("cambrian")
+@register_model("cambrian_model")
 class Cambrian(lmms):
     """
     cambrian_8b model
@@ -140,8 +130,7 @@ class Cambrian(lmms):
 
     def __init__(
         self,
-        pretrained: str = "/ML-A100/team/mm/zhangge/models/cambrian_8b",
-        # pretrained: str = "nyu-visionx/cambrian-8b",
+        pretrained: str = "nyu-visionx/cambrian-8b",
         device: Optional[str] = "cuda",
         device_map="auto",
         batch_size: Optional[Union[int, str]] = 1,
@@ -353,7 +342,7 @@ class Cambrian(lmms):
             for visual in visuals:
                 name = uuid.uuid4().hex.upper()[0:6]
                 visual.save(f"./lmms_eval/tmp/{name}.png")
-                visual_paths.append(f"./lmms_eval/tmp/{name}.png")
+                visual_paths.append(f"./lmms-eval/lmms_eval/tmp/{name}.png")
 
             # we assume all gen kwargs in the batch are the same
             # this is safe to assume because the `grouper` object ensures it.
@@ -370,15 +359,15 @@ class Cambrian(lmms):
                 elif not isinstance(until, list):
                     raise ValueError(f"Expected `gen_kwargs['until']` to be of type Union[str,list] but got {type(until)}")
             # preconfigure gen_kwargs with defaults
-            if "image_sizes" not in gen_kwargs:
-                try:
-                    gen_kwargs["image_sizes"] = [visuals[0].size]
-                except:
-                    gen_kwargs["image_sizes"] = None
+            # if "image_sizes" not in gen_kwargs:
+            #     try:
+            #         gen_kwargs["image_sizes"] = [visuals[0].size]
+            #     except:
+            #         gen_kwargs["image_sizes"] = None
             if "max_new_tokens" not in gen_kwargs:
                 gen_kwargs["max_new_tokens"] = 1024
             if "temperature" not in gen_kwargs:
-                gen_kwargs["temperature"] = 0
+                gen_kwargs["temperature"]= 0
             if "top_p" not in gen_kwargs:
                 gen_kwargs["top_p"] = None
             if "num_beams" not in gen_kwargs:
@@ -400,12 +389,13 @@ class Cambrian(lmms):
                     input_ids,
                     images=image_tensor,
                     image_sizes=image_sizes,
-                    do_sample=True if temperature > 0 else False,
-                    temperature=gen_kwargs["temperature"],
-                    num_beams=gen_kwargs["num_beams"],
-                    max_new_tokens=gen_kwargs["max_new_tokens"],
-                    # eos_token_id=eot_token_id,
-                    use_cache=True)
+                    **gen_kwargs)
+                    # do_sample=True if temperature > 0 else False,
+                    # temperature=gen_kwargs["temperature"],
+                    # num_beams=gen_kwargs["num_beams"],
+                    # max_new_tokens=gen_kwargs["max_new_tokens"],
+                    # # eos_token_id=eot_token_id,
+                    # use_cache=True)
             text_outputs = self.tokenizer.batch_decode(output_ids, skip_special_tokens=True)[0].strip()
            
             # cont_toks_list = cont.tolist()

@@ -1,9 +1,0 @@
-group: siwei_bench_sub2_vd
-task:
-- siwei_bench_atlocation_vd
-- siwei_bench_environment_vd
-- siwei_bench_madeof_vd
-- siwei_bench_nearby_vd
-- siwei_bench_partof_vd
-- siwei_bench_Used_For_vd
-

@@ -1,4 +1,4 @@
-dataset_path: /ML-A100/team/mm/zhangge/MMMU/right_and_error/reorder/MMMU_Dataset/mmmu_aug_dataset
+dataset_path: ./MMMU/right_and_error/reorder/MMMU_Dataset/mmmu_aug_dataset
 task: "mmmu_aug"
 test_split: train
 output_type: generate_until

@@ -1,4 +1,4 @@
-dataset_path: /ML-A100/team/mm/zhangge/MMMU_V/verify_interface_vision/annotate_stage2/processed_jsonl/shuffled.jsonl
+dataset_path: ./MMMU_V/verify_interface_vision/annotate_stage2/processed_jsonl/shuffled.jsonl
 task: "mmmu_aug_group_img"
 test_split: augument
 output_type: generate_until

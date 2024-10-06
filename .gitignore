@@ -104,3 +104,8 @@ describe/
 clip-vit-base-patch32/
 ai2d_check/
 lmms_eval/tasks/vatex/__pycache__/utils.cpython-310.pyc
+data_clean/
+gpt_4v/
+.js
+clip-vit-base-patch32/
+*.whl

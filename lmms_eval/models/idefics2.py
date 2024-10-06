@@ -215,19 +215,11 @@ class Idefics2(lmms):
                 prompt = self._processor.apply_chat_template(message, add_generation_prompt=True)
                 prompts.append(prompt)
             
-<<<<<<< HEAD
             # print(contexts)
             # print(prompts)
             # print(visuals)
             # input()
 # 
-=======
-            print(contexts)
-            print(prompts)
-            print(visuals)
-            input()
-
->>>>>>> 865c7069caf994108f2fb1c2648cb346c8741a4e
             inputs = self._processor(text=prompts, images=visuals, padding=True, return_tensors="pt")
             if 'max_new_tokens' not in gen_kwargs:
                 gen_kwargs['max_new_tokens']=1024
