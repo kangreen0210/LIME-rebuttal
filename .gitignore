@@ -110,3 +110,12 @@ gpt_4v/
 clip-vit-base-patch32/
 *.whl
 test/
+ocrbench_check/
+hf_dataset/
+utils/
+db_save_img/
+db_save_text_clip/
+ai2d_check/
+wv_check_align.jsonl
+wv_check_normal.jsonl
+text_query_ai2d.jsonl
