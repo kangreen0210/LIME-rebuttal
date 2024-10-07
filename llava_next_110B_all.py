@@ -218,11 +218,6 @@ def eval_model(args):
         with open(save_path,'w') as json_file:
             json_data=json.dumps(output_dict)
             json_file.write(json_data)
-    #         key=f'image{idx+1}'
-    #         description_dict[key]=output
-    # with open(json_path,'a') as jsonl_file:
-    #     json_data=json.dumps(description_dict)+'\n'
-    #     jsonl_file.write(json_data)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
