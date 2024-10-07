@@ -109,3 +109,4 @@ gpt_4v/
 .js
 clip-vit-base-patch32/
 *.whl
+test/
