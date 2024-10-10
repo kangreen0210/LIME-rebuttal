@@ -52,11 +52,10 @@ AVAILABLE_MODELS = {
     "emu2": "Emu2",
     "paligemma":"Paligemma",
     "internvl2_large":"InternVL2_large",
-    "MIO_sft":"MIO",
     "onevision":"onevision",
     "onevision_large":"onevision_large",
     "cogvlm2":"cogvlm2",
-    "MIO_batch":"MIO_batch"
+    "qwen2_vl_chat":"Qwen2_VL_chat"
 }
 
 for model_name, model_class in AVAILABLE_MODELS.items():
