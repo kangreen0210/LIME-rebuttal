@@ -233,7 +233,8 @@ class InternVL2(lmms):
             for k, v in DEFAULT_GEN_KWARGS.items():
                 if k not in gen_kwargs:
                     gen_kwargs[k] = v
-
+            print('Contexts:')
+            print(contexts)
             visuals = [doc_to_visual(self.task_dict[task][split][doc_id])]
             visuals = self.flatten(visuals)
             if self.modality == "image":
@@ -254,6 +255,8 @@ class InternVL2(lmms):
                 video_prefix = "".join([f"Frame{i+1}: <image>\n" for i in range(len(num_patches_list))])
                 question = video_prefix + contexts
                 response, history = self.model.chat(self.tokenizer, pixel_values, question, gen_kwargs, num_patches_list=num_patches_list, history=None, return_history=True)
+                print('Question:')
+                print(question)
             res.append(response)
             pbar.update(1)
         pbar.close()

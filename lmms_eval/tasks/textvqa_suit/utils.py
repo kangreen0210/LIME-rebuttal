@@ -14,8 +14,7 @@ from loguru import logger as eval_logger
 
 
 def textvqa_doc_to_visual(doc):
-    image=Image.open(doc["image"])
-    return [image.convert("RGB")]
+    return [doc["image"].convert("RGB")]
 
 
 def textvqa_process_results(doc, result):

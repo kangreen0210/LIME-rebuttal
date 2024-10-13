@@ -1,4 +1,4 @@
-dataset_path: ./vlms-bench-data-jsonl/ChartQA/
+dataset_path: LIME-ICLR/ChartQA
 dataset_kwargs:
   token: True
 task: "chartqa_suit"

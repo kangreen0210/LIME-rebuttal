@@ -1,4 +1,4 @@
-dataset_path: ./vlms-bench-data-jsonl/COCO-Caption2017/
+dataset_path: LIME-ICLR/COCO-Caption2017
 dataset_kwargs:
   token: True
 task: "coco2017_cap_suit_val"

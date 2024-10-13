@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-dataset_path: ./vlms-bench-data-jsonl/POPE/
-=======
-dataset_path: /ML-A100/team/mm/zk/lmms-eval/vlms-bench-data-jsonl/POPE/
->>>>>>> 865c7069caf994108f2fb1c2648cb346c8741a4e
+dataset_path: LIME-ICLR/POPE
 dataset_kwargs:
   token: True
 task: "pope_suit"

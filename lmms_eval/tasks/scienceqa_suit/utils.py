@@ -1,4 +1,7 @@
 from PIL import Image
+import base64
+from io import BytesIO
+
 def sqa_doc_to_text(doc, model_specific_prompt_kwargs=None):
     context, question, choices = doc["hint"], doc["question"], doc["choices"]
     len_choices = len(choices)
@@ -19,12 +22,12 @@ def sqa_doc_to_text(doc, model_specific_prompt_kwargs=None):
     else:
         raise ValueError(f"Unknown prompt format: {model_specific_prompt_kwargs}")
 
+INDEX = 0
 
 def sqa_doc_to_visual(doc):
     if doc["image"] is None:
         return []
-    image=Image.open(doc["image"])
-    return [image.convert("RGB")]
+    return [doc["image"].convert("RGB")]
 
 
 def sqa_doc_to_target(doc):

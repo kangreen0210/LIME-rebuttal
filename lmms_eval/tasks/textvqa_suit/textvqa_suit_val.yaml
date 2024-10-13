@@ -1,4 +1,4 @@
-dataset_path: ./vlms-bench-data-jsonl/textvqa/
+dataset_path: LIME-ICLR/textvqa
 task: textvqa_suit_val
 test_split: train
 metric_list:

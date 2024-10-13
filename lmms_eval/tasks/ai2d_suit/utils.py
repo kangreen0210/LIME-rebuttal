@@ -24,8 +24,8 @@ def ai2d_doc_to_text(doc, model_specific_prompt_kwargs=None):
 
 
 def ai2d_doc_to_visual(doc):
-    image=Image.open(doc["image"])
-    return [image.convert("RGB")]
+    # image=Image.open(doc["image"])
+    return [doc["image"].convert("RGB")]
 
 
 def ai2d_doc_to_target(doc, model_specific_target_kwargs):

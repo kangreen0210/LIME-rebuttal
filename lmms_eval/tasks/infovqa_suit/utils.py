@@ -8,8 +8,7 @@ from loguru import logger as eval_logger
 
 
 def infovqa_doc_to_visual(doc):
-    image=Image.open(doc["image"])
-    return [image.convert("RGB")]
+    return [doc["image"].convert("RGB")]
 
 
 def infovqa_doc_to_text(doc, model_specific_prompt_kwargs):

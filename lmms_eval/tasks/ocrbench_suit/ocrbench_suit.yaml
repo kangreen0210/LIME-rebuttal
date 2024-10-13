@@ -1,4 +1,4 @@
-dataset_path: ./vlms-bench-data-jsonl/ocrbench
+dataset_path: LIME-ICLR/ocrbench
 dataset_kwargs:
   token: True
 task: "ocrbench_suit"

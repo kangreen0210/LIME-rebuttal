@@ -120,3 +120,5 @@ wv_check_align.jsonl
 wv_check_normal.jsonl
 text_query_ai2d.jsonl
 visual_code/
+*.toml
+upload_data/

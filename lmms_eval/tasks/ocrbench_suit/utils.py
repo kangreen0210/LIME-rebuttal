@@ -1,6 +1,8 @@
 from lmms_eval.tasks._task_utils.file_utils import generate_submission_file
 from PIL import Image
 from loguru import logger
+import base64
+from io import BytesIO
 
 # Add the following functions to your existing utils.py file
 OCRBench_score = {
@@ -18,9 +20,9 @@ OCRBench_score = {
 
 
 def ocrbench_doc_to_visual(doc):
-    # Assuming the 'doc' dictionary has a key 'image' with image data
-    image=Image.open(doc["image"])
-    return [image.convert("RGB")]
+    if doc["image"] is None:
+        return []
+    return [doc["image"].convert("RGB")]
 
 
 def ocrbench_doc_to_text(doc):

@@ -1,4 +1,4 @@
-dataset_path: ./vlms-bench-data-jsonl/ai2d
+dataset_path: LIME-ICLR/ai2d
 task: "ai2d_suit"
 dataset_kwargs:
   token: True

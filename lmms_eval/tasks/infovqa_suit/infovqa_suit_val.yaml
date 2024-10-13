@@ -1,4 +1,4 @@
-dataset_path: ./vlms-bench-data-jsonl/infovqa/
+dataset_path: LIME-ICLR/infovqa
 task: "infovqa_suit_val"
 test_split: train
 output_type: generate_until
