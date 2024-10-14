@@ -15,8 +15,7 @@ TEXTCAPS_METRICS = ["Bleu_4", "Bleu_3", "Bleu_2", "Bleu_1", "METEOR", "ROUGE_L",
 
 
 def textcaps_doc_to_visual(doc):
-    image=Image.open(doc["image"])
-    return [image.convert("RGB")]
+    return [doc["image"].convert("RGB")]
 
 
 def textcaps_doc_to_text(doc, model_specific_prompt_kwargs=None):

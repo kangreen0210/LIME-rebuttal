@@ -1,3 +1,0 @@
-group : coco_cap_vd
-task:
-  - coco2017_cap_val_vd

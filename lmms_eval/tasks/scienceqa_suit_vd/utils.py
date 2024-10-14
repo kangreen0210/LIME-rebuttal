@@ -25,8 +25,7 @@ def sqa_doc_to_text(doc, model_specific_prompt_kwargs=None):
 def sqa_doc_to_visual(doc):
     if doc["image"] is None:
         return []
-    image=Image.open(doc["image"])
-    return [image.convert("RGB")]
+    return [doc["image"].convert("RGB")]
 
 
 def sqa_doc_to_target(doc):

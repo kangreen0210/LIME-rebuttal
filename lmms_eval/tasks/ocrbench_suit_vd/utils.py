@@ -19,8 +19,7 @@ OCRBench_score = {
 
 def ocrbench_doc_to_visual(doc):
     # Assuming the 'doc' dictionary has a key 'image' with image data
-    image=Image.open(doc["image"])
-    return [image.convert("RGB")]
+    return [doc["image"].convert("RGB")]
 
 
 def ocrbench_doc_to_text(doc):

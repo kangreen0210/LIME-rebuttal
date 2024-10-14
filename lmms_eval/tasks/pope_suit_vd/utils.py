@@ -3,8 +3,7 @@ from PIL import Image
 
 def pope_doc_to_visual(doc):
     # Assuming the 'doc' dictionary has a key 'image' with image data
-    image=Image.open(doc["image"])
-    return [image.convert("RGB")]
+    return [doc["image"].convert("RGB")]
 
 
 def pope_doc_to_text(doc):

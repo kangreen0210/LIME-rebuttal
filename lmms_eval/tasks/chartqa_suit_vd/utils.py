@@ -1,7 +1,6 @@
 from PIL import Image
 def chartqa_doc_to_visual(doc):
-    image=Image.open(doc["image"])
-    return [image.convert("RGB")]
+    return [doc["image"].convert("RGB")]
 
 
 def chartqa_doc_to_text(doc, model_specific_prompt_kwargs):

@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-dataset_path: ./vlms-bench-data-selected-VD/COCO-Caption2017/
-=======
-dataset_path: /ML-A100/team/mm/zk/lmms-eval/vlms-bench-data-selected-VD/COCO-Caption2017/
->>>>>>> 865c7069caf994108f2fb1c2648cb346c8741a4e
+dataset_path: LIME-ICLR/COCO-Caption2017
 dataset_kwargs:
   token: True
 task: "coco2017_cap_suit_val_vd"
