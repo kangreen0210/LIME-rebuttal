@@ -1,4 +1,4 @@
-dataset_path: LIME-ICLR/ai2d
+dataset_path: LIME-DATA/ai2d
 task: "ai2d_suit_vd"
 dataset_kwargs:
   token: True

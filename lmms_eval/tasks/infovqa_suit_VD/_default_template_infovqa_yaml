@@ -1,4 +1,4 @@
-dataset_path: LIME-ICLR/infovqa
+dataset_path: LIME-DATA/infovqa
 task: "infovqa_suit_val"
 dataset_kwargs:
   token: True

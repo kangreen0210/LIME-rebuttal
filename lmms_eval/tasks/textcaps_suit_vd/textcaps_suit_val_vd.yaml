@@ -1,4 +1,4 @@
-dataset_path: LIME-ICLR/TextCaps
+dataset_path: LIME-DATA/TextCaps
 dataset_kwargs:
   token: True
 task: "textcaps_suit_val_vd"

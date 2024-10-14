@@ -3,7 +3,7 @@
 
 # LIME: LESS IS MORE FOR MLLM EVALUATION
 ## Annoucement
-- [2024-10]  📰 We have released both the [LIME](https://huggingface.co/LIME-ICLR) dataset and the  data duration pipeline! 
+- [2024-10]  📰 We have released both the [LIME](https://huggingface.co/LIME-DATA) dataset and the  data duration pipeline! 
 - [2024-09]  🍋 We have open-sourced the evaluation data and corresponding evaluation code for `LIME`. The data duration pipeline for LIME will be open-sourced within two weeks.
 
 ## Introduction
@@ -22,7 +22,7 @@ cd lmms-eval
 pip install -e .
 ```
 ### 2. download dataset from huggingface
-download all datasets from [here](https://huggingface.co/LIME-ICLR)
+download all datasets from [here](https://huggingface.co/LIME-DATA)
 
 ### 3.run evaluation
 #### For MLLMs evaluation:

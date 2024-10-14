@@ -1,4 +1,4 @@
-dataset_path: LIME-ICLR/POPE
+dataset_path: LIME-DATA/POPE
 dataset_kwargs:
   token: True
 task: "pope_suit_vd"

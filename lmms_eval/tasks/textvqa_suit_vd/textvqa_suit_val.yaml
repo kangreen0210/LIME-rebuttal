@@ -1,4 +1,4 @@
-dataset_path: LIME-ICLR/textvqa
+dataset_path: LIME-DATA/textvqa
 task: textvqa_suit_val_vd
 test_split: train
 metric_list:

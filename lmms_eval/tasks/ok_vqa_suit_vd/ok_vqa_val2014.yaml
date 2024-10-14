@@ -1,4 +1,4 @@
-dataset_path: LIME-ICLR/OK-VQA
+dataset_path: LIME-DATA/OK-VQA
 group: ok_vqa_suit_vd
 task: ok_vqa_suit_val2014_vd
 test_split: train
