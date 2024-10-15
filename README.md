@@ -13,11 +13,10 @@ We use a gneral data process pipeline and curate a LIME, which contains 9403 sam
 ## How to use LIME
 
 ### 1. Installation
-For quickly start using LIME, we recommend following the [lmms-eval](https://lmms-lab.github.io/)  tutorial to quickly deploy the evaluation environment.
-
+First, you need to download the repo to your local machine. For quickly start using LIME, we recommend following the [lmms-eval](https://lmms-lab.github.io/)  tutorial to quickly deploy the evaluation environment.
 also you can install by following steps
+
 ```bash
-git clone https://anonymous.4open.science/r/LIME-49CD
 cd lmms-eval
 pip install -e .
 ```
